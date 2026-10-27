@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import brayanImage from "../assets/imagens/brayan.png";
-import brenoImage from "../assets/imagens/breno.jpg";
-import diogoImage from "../assets/imagens/diogo.webp";
-import edilsonImage from "../assets/imagens/edilson.jpeg";
-import gustavoImage from "../assets/imagens/gustavo.jpeg";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Hero from "../../components/Hero";
+import brayanImage from "../../assets/imagens/brayan.png";
+import brenoImage from "../../assets/imagens/breno.jpg";
+import diogoImage from "../../assets/imagens/diogo.webp";
+import edilsonImage from "../../assets/imagens/edilson.jpeg";
+import gustavoImage from "../../assets/imagens/gustavo.jpeg";
 
 interface Member {
     id: string;

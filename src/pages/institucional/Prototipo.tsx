@@ -1,6 +1,6 @@
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import EcoplayPrototype from "../components/prototipo-structure/EcoplayPrototype";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import EcoplayPrototype from "../../components/prototipo-structure/EcoplayPrototype";
 
 function Prototipo() {
     return (

@@ -14,7 +14,7 @@ const navigationItems = [
     { label: 'Fluxograma', path: '/fluxograma' },
     { label: 'Contato', path: '/contato' },
     { label: 'FAQ', path: '/faq', active: true },
-    { label: 'Protótipo', path: '/prototipo' }
+    { label: 'Acesse a Plataforma', path: '/prototipo' }
 ]
 
 function Header({ activePage }: headerProps) {
@@ -53,7 +53,7 @@ function Header({ activePage }: headerProps) {
                     <span aria-hidden="true">&#9776;</span>
                 </button>
                 <nav className="hidden items-center gap-3 min-[921px]:flex" aria-label="Navegação principal">
-                    {navigationItems.map((item) => item.label == "Protótipo" ? (
+                    {navigationItems.map((item) => item.label == "Acesse a Plataforma" ? (
                         <a
                             key={item.path}
                             href={item.path}

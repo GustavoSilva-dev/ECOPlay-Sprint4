@@ -1,9 +1,9 @@
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import useScrollReveal from "../hooks/useScrollReveal";
-import NextPageButton from "../components/NextPageButton";
-import startIcon from "../assets/imagens/start-icone.png";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Hero from "../../components/Hero";
+import useScrollReveal from "../../hooks/useScrollReveal";
+import NextPageButton from "../../components/NextPageButton";
+import startIcon from "../../assets/imagens/start-icone.png";
 
 const steps = [
     {

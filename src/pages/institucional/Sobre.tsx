@@ -1,9 +1,9 @@
-import Card from "../components/Card";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import NextPageButton from "../components/NextPageButton";
-import useScrollReveal from "../hooks/useScrollReveal";
+import Card from "../../components/Card";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Hero from "../../components/Hero";
+import NextPageButton from "../../components/NextPageButton";
+import useScrollReveal from "../../hooks/useScrollReveal";
 
 function Sobre() {
     const pageRef = useScrollReveal<HTMLDivElement>();

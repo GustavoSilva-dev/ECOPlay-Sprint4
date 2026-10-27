@@ -1,8 +1,8 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Hero from "../components/Hero";
-import NextPageButton from "../components/NextPageButton";
-import useScrollReveal from "../hooks/useScrollReveal";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Hero from "../../components/Hero";
+import NextPageButton from "../../components/NextPageButton";
+import useScrollReveal from "../../hooks/useScrollReveal";
 
 function Home() {
     const pageRef = useScrollReveal<HTMLDivElement>();

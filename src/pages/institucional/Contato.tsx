@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import NextPageButton from "../components/NextPageButton";
-import useScrollReveal from "../hooks/useScrollReveal";
-import brayanImage from "../assets/imagens/brayan.png";
-import brenoImage from "../assets/imagens/breno.jpg";
-import diogoImage from "../assets/imagens/diogo.webp";
-import edilsonImage from "../assets/imagens/edilson.jpeg";
-import gustavoImage from "../assets/imagens/gustavo.jpeg";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Hero from "../../components/Hero";
+import NextPageButton from "../../components/NextPageButton";
+import useScrollReveal from "../../hooks/useScrollReveal";
+import brayanImage from "../../assets/imagens/brayan.png";
+import brenoImage from "../../assets/imagens/breno.jpg";
+import diogoImage from "../../assets/imagens/diogo.webp";
+import edilsonImage from "../../assets/imagens/edilson.jpeg";
+import gustavoImage from "../../assets/imagens/gustavo.jpeg";
 
 interface ContactFormData {
     email: string;

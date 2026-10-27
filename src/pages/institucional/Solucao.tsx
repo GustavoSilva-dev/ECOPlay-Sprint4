@@ -1,10 +1,10 @@
-import Footer from "../components/Footer";
-import Header from "../components/Header";
-import Hero from "../components/Hero";
-import useScrollReveal from "../hooks/useScrollReveal";
-import businessIcon from "../assets/imagens/business-icon.png";
-import gearIcon from "../assets/imagens/engrenagem-icone.png";
-import NextPageButton from "../components/NextPageButton";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import Hero from "../../components/Hero";
+import useScrollReveal from "../../hooks/useScrollReveal";
+import businessIcon from "../../assets/imagens/business-icon.png";
+import gearIcon from "../../assets/imagens/engrenagem-icone.png";
+import NextPageButton from "../../components/NextPageButton";
 
 function Solucao() {
     const pageRef = useScrollReveal<HTMLDivElement>();
