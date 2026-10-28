@@ -10,6 +10,7 @@ import Contato from './pages/institucional/Contato'
 import FAQs from './pages/institucional/FAQs'
 import ContatoDinamico from './pages/institucional/ContatoDinamico'
 import Register from './pages/auth/Register'
+import AppHome from './pages/app/Home'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/quem-somos/:id" element={<ContatoDinamico />}></Route>
         <Route path="/faq" element={<FAQs />}></Route>
         <Route path="/prototipo" element={<Register />}></Route>
+        <Route path="/home" element={<AppHome />}></Route>
         <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>
     </BrowserRouter>

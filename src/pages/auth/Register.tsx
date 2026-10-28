@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaRegEnvelope, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { FiArrowRight, FiLock } from "react-icons/fi";
+import { useNavigate } from "react-router";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -12,17 +13,18 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const isLogin = mode === "login";
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoading(true);
+        setIsLoading(true);
 
         console.log(isLogin ? { email, senha: password } : { nome: name, email, senha: password });
-
-        setTimeout(() => setLoading(false), 1000);
+        localStorage.setItem("user", JSON.stringify(isLogin ? { email, senha: password } : { nome: name, email, senha: password }));
+        setTimeout(() => navigate("/home"), 1800);
     };
 
     return (
@@ -31,15 +33,15 @@ const Register = () => {
             <main className="px-3 pt-24 sm:px-8 sm:pb-8 sm:pt-28">
             <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-300 flex-col">
                 <div className="flex items-center justify-between gap-3 text-[0.7rem] font-bold sm:text-xs">
-                    <span className="rounded-full bg-[#e7f1ff] px-3 py-1.5 uppercase tracking-wide text-[#183f95]">
-                        <span className="mr-1.5 text-[#159447]">●</span>Nível 1 • Explorador
+                    <span className="rounded-full bg-[#e7f1ff] px-3 py-1.5 uppercase tracking-wide text-[#183f95] rotate-[-3deg]">
+                        <span className="mr-1.5 text-[#159447]">●</span>15.000 ECOPoints
                     </span>
-                    <span className="rounded-full bg-[#e9ddff] px-3 py-1.5 text-[#6140b7]">
-                        <span className="mr-1">✦</span>+50 XP Bônus
+                    <span className="rounded-full bg-[#e9ddff] px-3 py-1.5 text-[#6140b7] rotate-[3deg]">
+                        <span className="mr-1">✦</span>LOOTBOX Mítica
                     </span>
                 </div>
 
-                <section className="flex flex-col items-center py-8 text-center sm:py-10">
+                <section className="flex flex-col items-center py-8 text-center sm:py-10 content-fade-in">
                     <h1 className="font-['Nico_Moji',sans-serif] text-5xl font-normal leading-none text-[#2c3952] drop-shadow-[3px_4px_0_rgb(83_96_255_/_0.3)] sm:text-6xl">
                         ECOPlay
                     </h1>
@@ -48,7 +50,7 @@ const Register = () => {
                     </p>
                 </section>
 
-                <section className="relative mb-5 rounded-2xl bg-gradient-to-r from-[#e1eaff] to-[#eff1ff] px-5 py-6 sm:px-7 sm:py-7">
+                <section className="relative mb-5 rounded-2xl bg-gradient-to-r from-[#e1eaff] to-[#eff1ff] px-5 py-6 sm:px-7 sm:py-7 content-fade-in">
                     <div className="pr-24 sm:pr-40">
                         <span className="text-xs font-bold uppercase tracking-wide text-[#5360ff] sm:text-sm">◎ Desafio diário</span>
                         <h2 className="mt-2 text-lg font-bold sm:text-xl">Conecte-se à sua ecovila</h2>
@@ -56,12 +58,12 @@ const Register = () => {
                             Reduza pegadas de carbono e desbloqueie cupons locais.
                         </p>
                     </div>
-                    <div className="absolute right-5 top-5 flex h-20 w-20 items-center justify-center rounded-xl bg-[#b8e4d6] text-4xl sm:right-7 sm:top-7 sm:h-24 sm:w-24">
+                    <div className="absolute right-5 top-5 flex h-20 w-20 items-center justify-center rounded-4xl bg-[#b8e4d6] text-4xl sm:right-7 sm:top-7 sm:h-24 sm:w-24">
                         🌳
                     </div>
                 </section>
 
-                <section className="rounded-3xl bg-white p-5 shadow-[0_10px_30px_rgba(35,52,111,0.12)] sm:p-7">
+                <section className="rounded-3xl bg-white p-5 shadow-[0_10px_30px_rgba(35,52,111,0.12)] sm:p-7 content-fade-in">
                     <div className="flex rounded-full bg-[#e7edff] p-1.5 text-sm font-semibold sm:text-base">
                         <button
                             type="button"
@@ -79,6 +81,12 @@ const Register = () => {
                         </button>
                     </div>
 
+                    {isLoading ? (
+                        <div className="flex min-h-64 flex-col items-center justify-center gap-5 text-center" role="status">
+                            <span className="h-12 w-12 animate-spin rounded-full border-4 border-[#dce3ff] border-t-[#5360ff]" />
+                            <p className="text-base font-semibold text-[#26325e]">Preparando seu ecossistema...</p>
+                        </div>
+                    ) : (
                     <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                         {!isLogin && (
                             <label className="block text-sm font-semibold sm:text-base">
@@ -132,17 +140,18 @@ const Register = () => {
                         </label>
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={isLoading}
                             className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-[#5360ff] py-4 text-sm font-bold text-white transition-colors hover:bg-[#414dd5] disabled:cursor-wait disabled:opacity-70 sm:text-base"
                         >
-                            {loading ? "Carregando..." : isLogin ? "Entrar no ECOPlay" : "Criar minha conta"}
-                            {!loading && <FiArrowRight />}
+                            {isLogin ? "Entrar no ECOPlay" : "Criar minha conta"}
+                            <FiArrowRight />
                         </button>
                     </form>
+                    )}
 
                 </section>
 
-                <section className="mt-5 rounded-2xl bg-[#e2eaff] px-5 py-5 sm:px-6">
+                <section className="mt-5 rounded-2xl bg-[#e2eaff] px-5 py-5 sm:px-6 content-fade-in">
                     <div className="flex items-center gap-2">
                         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8cf0c1] text-lg">♟</span>
                         <div className="flex-1">
