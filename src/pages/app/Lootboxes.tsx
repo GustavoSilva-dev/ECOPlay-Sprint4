@@ -15,7 +15,7 @@ export interface Recompensa {
 export interface Lootbox {
     id: string;
     nome: string;
-    tipo: "COMUM" | "ÉPICA";
+    tipo: "COMUM" | "INCOMUM" | "ÉPICA" | "LENDÁRIO" | "MÍTICO";
     preco: number;
     descricao: string;
     recompensasPossiveis: Recompensa[];
@@ -35,13 +35,46 @@ const lootboxes: Lootbox[] = [
     },
     {
         id: "lendaria",
-        nome: "Baú Lendário Eco",
+        nome: "Baú Épico",
         tipo: "ÉPICA",
         preco: 750,
         descricao: "Vouchers de compras & badges raras",
         recompensasPossiveis: [
             { id: "voucher", nome: "Voucher de comércio local", descricao: "Um voucher especial para usar em um parceiro ECOPlay." },
             { id: "badge", nome: "Badge Guardião ECO", descricao: "Uma badge rara foi adicionada ao seu perfil." },
+        ],
+    },
+    {
+        id: "incomum",
+        nome: "Caixa Incomum",
+        tipo: "INCOMUM",
+        preco: 300,
+        descricao: "Sementes especiais e itens de personalização",
+        recompensasPossiveis: [
+            { id: "muda", nome: "Muda especial", descricao: "Uma muda especial foi adicionada à sua coleção." },
+            { id: "cosmetico", nome: "Cosmético ECO", descricao: "Você recebeu um novo item para personalizar seu perfil." },
+        ],
+    },
+    {
+        id: "lendario",
+        nome: "Baú Lendário",
+        tipo: "LENDÁRIO",
+        preco: 1200,
+        descricao: "Itens valiosos e recompensas de alto nível",
+        recompensasPossiveis: [
+            { id: "voucher-lendario", nome: "Voucher premium", descricao: "Você recebeu um voucher premium de um parceiro ECOPlay." },
+            { id: "badge-lendaria", nome: "Badge Lendária", descricao: "Uma badge lendária foi adicionada ao seu perfil." },
+        ],
+    },
+    {
+        id: "mitico",
+        nome: "Baú Mítico",
+        tipo: "MÍTICO",
+        preco: 2500,
+        descricao: "Recompensas únicas para grandes conquistas",
+        recompensasPossiveis: [
+            { id: "trofeu", nome: "Trofeu Mítico", descricao: "Você desbloqueou uma recompensa exclusiva." },
+            { id: "xp-mitico", nome: "XP Mítico", descricao: "Você recebeu uma grande quantidade de experiência bônus." },
         ],
     },
 ];
@@ -58,8 +91,7 @@ function Lootboxes() {
         }
 
         // TODO: Chamar API (POST) para registrar a compra da lootbox, deduzir saldo e retornar a recompensa gerada pelo backend
-        const rewardIndex = Math.floor(Math.random() * lootbox.recompensasPossiveis.length);
-        setSelectedReward(lootbox.recompensasPossiveis[rewardIndex]);
+        setSelectedReward(lootbox.recompensasPossiveis[0]);
         setIsModalOpen(true);
     };
 
@@ -74,17 +106,16 @@ function Lootboxes() {
             <div className="pt-18">
                 <TopBar />
                 <main className="content-fade-in mx-auto mt-6 w-full max-w-5xl flex-1 px-4 pb-16 pt-16 sm:px-6">
-                    <div className="mb-8 flex items-end justify-between gap-4">
+                    <div className="mb-8 flex items-center gap-3">
                         <div className="flex items-center gap-3">
                             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-2xl text-indigo-600">
                                 <FiBox aria-hidden="true" />
                             </span>
                             <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">Recompensas e Lootboxes</h1>
                         </div>
-                        <span className="shrink-0 text-[0.65rem] font-semibold tracking-wide text-gray-400">ROLE LATERALMENTE</span>
                     </div>
 
-                    <div className="flex gap-6 overflow-x-auto pb-4" aria-label="Lootboxes disponíveis">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Lootboxes disponíveis">
                         {lootboxes.map((lootbox) => (
                             <LootboxCard
                                 key={lootbox.id}
