@@ -1,8 +1,6 @@
-import { PiPlantFill } from "react-icons/pi";
-
 function TopBar() {
     return (
-        <header className="border-b mt-[-5px] w-full border-slate-200 bg-white px-4 py-3 shadow-sm sm:px-6 fixed">
+        <header className="border-b mt-[-5px] w-full border-slate-200 bg-white px-4 py-3 shadow-sm sm:px-6 fixed z-1000">
             <div className="mx-auto flex max-w-4xl items-center justify-between">
                 <div className="flex items-center">
                     <div>

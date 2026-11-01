@@ -1,5 +1,6 @@
 import { BsBoxSeam, BsShop } from "react-icons/bs";
 import { GiTrophy } from "react-icons/gi";
+import { PiTargetFill } from "react-icons/pi";
 import type { IconType } from "react-icons";
 
 interface Shortcut {
@@ -16,6 +17,7 @@ const shortcuts: Shortcut[] = [
     { id: 1, title: "Comércios Próximos", subtitle: "Parceiros com desconto", icon: BsShop, iconClassName: "bg-indigo-100 text-indigo-600", backgroundClassname: "bg-linear-to-br from-[#5360FF] to-[#FFFFFF]" },
     { id: 2, title: "Abrir Lootboxes", subtitle: "Baú diário pronto", icon: BsBoxSeam, iconClassName: "bg-violet-100 text-violet-600", badge: "1 nova!", backgroundClassname: "bg-linear-to-br from-[#6B46C1] to-[#FFFFFF]" },
     { id: 3, title: "Recompensas", subtitle: "Troque seus pontos", icon: GiTrophy, iconClassName: "bg-emerald-100 text-emerald-600", backgroundClassname: "bg-linear-to-br from-[#10B981] to-[#FFFFFF]" },
+    { id: 4, title: "Missões Disponíveis", subtitle: "Complete e ganhe pontos", icon: PiTargetFill, iconClassName: "bg-amber-100 text-amber-600", backgroundClassname: "bg-linear-to-br from-[#F59E0B] to-[#FFFFFF]" },
 ];
 
 function QuickShortcuts() {
