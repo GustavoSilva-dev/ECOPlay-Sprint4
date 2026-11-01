@@ -89,7 +89,8 @@ As ações sustentáveis realizadas pelos usuários poderão gerar pontuações 
 - useScrollReveal (hook personalizado para animar scroll)
 
 ## Back-End
-```Ainda não implementado```
+- Login integrado à API REST local (`POST /usuarios/login`);
+- URL configurada pela variável `VITE_API_URL` no arquivo `.env`.
 
 ## Versionamento
 - Git

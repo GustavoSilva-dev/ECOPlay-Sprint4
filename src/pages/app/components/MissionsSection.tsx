@@ -16,7 +16,7 @@ function MissionsSection() {
     const navigate = useNavigate();
 
     return (
-        <section aria-labelledby="missions-title" className="mt-20">
+        <section aria-labelledby="missions-title" className="mt-5">
             <div className="mb-3 flex items-center justify-between">
                 <h2 id="missions-title" className="text-lg font-bold text-slate-800">Missões</h2>
                 <button type="button" onClick={() => navigate("/plataforma/missoes")} className="text-xs font-semibold text-indigo-600 hover:text-indigo-800">Ver todas</button>

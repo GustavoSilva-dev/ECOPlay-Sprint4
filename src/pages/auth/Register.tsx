@@ -14,17 +14,47 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const isLogin = mode === "login";
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
+        setErrorMessage("");
 
-        console.log(isLogin ? { email, senha: password } : { nome: name, email, senha: password });
-        localStorage.setItem("user", JSON.stringify(isLogin ? { email, senha: password } : { nome: name, email, senha: password }));
-        setTimeout(() => navigate("/plataforma/home"), 1800);
+        if (!isLogin) {
+            localStorage.setItem("user", JSON.stringify({ nome: name, email, senha: password }));
+            window.setTimeout(() => navigate("/plataforma/home"), 1000);
+            return;
+        }
+
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const loginRequest = fetch(`${apiUrl}/usuarios/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, senha: password }),
+        });
+        const minimumDelay = new Promise((resolve) => window.setTimeout(resolve, 1000));
+
+        try {
+            const response = await loginRequest.finally(() => minimumDelay);
+
+            if (!response.ok) {
+                throw new Error(`Login failed with status ${response.status}`);
+            }
+
+            const user = await response.json();
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate("/plataforma/home");
+        } catch (error) {
+            console.error("Não foi possível realizar o login.", error);
+            setErrorMessage("Email ou senha inválida");
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -138,6 +168,11 @@ const Register = () => {
                                 </button>
                             </span>
                         </label>
+                        {errorMessage && (
+                            <p className="text-sm font-semibold text-red-600" role="alert">
+                                {errorMessage}
+                            </p>
+                        )}
                         <button
                             type="submit"
                             disabled={isLoading}
