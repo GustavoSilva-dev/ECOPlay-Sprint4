@@ -13,6 +13,7 @@ import Register from './pages/auth/Register'
 import AppHome from './pages/app/Home'
 import Missions from './pages/app/Missions'
 import Comercios from './pages/app/Comercios'
+import Lootboxes from './pages/app/Lootboxes'
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/plataforma/home" element={<AppHome />}></Route>
         <Route path="/plataforma/missoes" element={<Missions />}></Route>
         <Route path="/plataforma/comercios" element={<Comercios />}></Route>
+        <Route path="/plataforma/recompensas" element={<Lootboxes />}></Route>
         <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>
     </BrowserRouter>

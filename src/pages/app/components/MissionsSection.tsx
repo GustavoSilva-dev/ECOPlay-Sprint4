@@ -29,7 +29,7 @@ function MissionsSection() {
                         </div>
                         <div className="min-w-0 flex-1">
                             <h3 className="mt-1 truncate text-sm font-bold text-slate-800">{mission.title}</h3>
-                            <p className="mt-1 text-xs font-semibold text-emerald-600">+{mission.points} pontos ECO</p>
+                            <p className="mt-1 text-xs font-bold text-emerald-600 flex gap-1 items-center">+{mission.points} <span className="font-['Nico_Moji',sans-serif] font-medium">ECOPoints</span></p>
                         </div>
                         <button type="button" onClick={() => navigate("/plataforma/missoes")} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 hover:scale-105 cursor-pointer">
                             Ver
