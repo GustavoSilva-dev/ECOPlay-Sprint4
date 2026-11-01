@@ -47,7 +47,7 @@ function QuickShortcuts() {
                             <span className="mt-1 block text-xs text-white">{subtitle}</span>
                         </span>
                         {badge && <span className="absolute right-4 top-4 rounded-full bg-red-100 px-2 py-0.5 text-[0.6rem] font-bold text-red-600">{badge}</span>}
-                        <span className="text-lg text-slate-400" aria-hidden="true">&gt;</span>
+                        <span className="text-lg text-white font-bold" aria-hidden="true">&gt;</span>
                     </button>
                 ))}
             </div>

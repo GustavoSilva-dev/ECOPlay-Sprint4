@@ -15,6 +15,7 @@ export interface Recompensa {
 export interface Lootbox {
     id: string;
     nome: string;
+    background?: string;
     tipo: "COMUM" | "INCOMUM" | "ÉPICA" | "LENDÁRIO" | "MÍTICO";
     preco: number;
     descricao: string;
@@ -37,6 +38,7 @@ const lootboxes: Lootbox[] = [
         id: "lendaria",
         nome: "Baú Épico",
         tipo: "ÉPICA",
+        background: "bg-gradient-to-b from-gray-50 to-violet-200",
         preco: 750,
         descricao: "Vouchers de compras & badges raras",
         recompensasPossiveis: [
@@ -48,6 +50,7 @@ const lootboxes: Lootbox[] = [
         id: "incomum",
         nome: "Caixa Incomum",
         tipo: "INCOMUM",
+        background: "bg-gradient-to-b from-gray-50 to-lime-100",
         preco: 300,
         descricao: "Sementes especiais e itens de personalização",
         recompensasPossiveis: [
@@ -59,6 +62,7 @@ const lootboxes: Lootbox[] = [
         id: "lendario",
         nome: "Baú Lendário",
         tipo: "LENDÁRIO",
+        background: "bg-gradient-to-b from-gray-50 to-yellow-200",
         preco: 1200,
         descricao: "Itens valiosos e recompensas de alto nível",
         recompensasPossiveis: [
@@ -70,6 +74,7 @@ const lootboxes: Lootbox[] = [
         id: "mitico",
         nome: "Baú Mítico",
         tipo: "MÍTICO",
+        background: "bg-gradient-to-b from-gray-50 to-rose-200",
         preco: 2500,
         descricao: "Recompensas únicas para grandes conquistas",
         recompensasPossiveis: [
@@ -119,6 +124,7 @@ function Lootboxes() {
                         {lootboxes.map((lootbox) => (
                             <LootboxCard
                                 key={lootbox.id}
+                                background={lootbox.background}
                                 lootbox={lootbox}
                                 onAcquire={() => handleAbrirLootbox(lootbox.id)}
                             />

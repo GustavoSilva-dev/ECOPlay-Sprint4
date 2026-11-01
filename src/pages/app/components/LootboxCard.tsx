@@ -3,10 +3,11 @@ import type { Lootbox } from "../Lootboxes";
 
 interface LootboxCardProps {
     lootbox: Lootbox;
+    background?: string;
     onAcquire: () => void;
 }
 
-function LootboxCard({ lootbox, onAcquire }: LootboxCardProps) {
+function LootboxCard({ lootbox, background, onAcquire }: LootboxCardProps) {
     const typeStyles = {
         COMUM: "border-slate-200",
         INCOMUM: "border-green-200",
@@ -16,7 +17,7 @@ function LootboxCard({ lootbox, onAcquire }: LootboxCardProps) {
     };
 
     return (
-        <article className={`flex min-h-72 flex-col rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md ${typeStyles[lootbox.tipo]}`}>
+        <article className={`flex min-h-72 flex-col rounded-2xl border ${background || 'bg-white'} p-5 shadow-sm transition hover:shadow-md ${typeStyles[lootbox.tipo]}`}>
             <div className="flex items-center justify-between gap-3">
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.65rem] font-bold tracking-wide text-slate-600">
                     {lootbox.tipo}
