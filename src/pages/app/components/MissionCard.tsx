@@ -5,8 +5,7 @@ export interface MissionCardData {
     title: string;
     description: string;
     points: number;
-    type: string;
-    expiresIn: string;
+    comercio?: string;
     icon: IconType;
     iconClassName: string;
 }
@@ -26,12 +25,12 @@ function MissionCard({ mission, isCompleted, onComplete }: MissionCardProps) {
                 <Icon aria-hidden="true" />
             </div>
             <div className="min-w-0 flex-1">
-                <p className="text-[0.65rem] font-bold tracking-wide text-emerald-600">
-                    {mission.type} <span className="font-medium text-slate-400">- Expira em {mission.expiresIn}</span>
-                </p>
-                <h2 className="mt-1 text-base font-bold text-slate-800">{mission.title}</h2>
+                {mission.comercio && (
+                    <p className="text-xs font-bold text-indigo-600">Comércio: {mission.comercio}</p>
+                )}
+                <h2 className={`${mission.comercio ? "mt-1" : ""} text-base font-bold text-slate-800`}>{mission.title}</h2>
                 <p className="mt-1 text-sm text-slate-500">{mission.description}</p>
-                <p className="mt-2 text-sm font-bold text-emerald-600">+{mission.points} pontos ECO</p>
+                <p className="mt-2 text-sm font-bold text-emerald-600 flex gap-1 items-center">+{mission.points} <span className="font-['Nico_Moji',sans-serif] font-medium">ECOPoints</span></p>
             </div>
             <button
                 type="button"

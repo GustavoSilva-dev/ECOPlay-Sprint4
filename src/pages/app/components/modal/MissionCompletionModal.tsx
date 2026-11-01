@@ -22,7 +22,9 @@ function MissionCompletionModal({ mission, isConfirming, onConfirm, onClose }: M
                     <Icon aria-hidden="true" />
                 </div>
                 <div className="mt-5 text-center">
-                    <p className="text-xs font-bold uppercase tracking-wide text-emerald-600">{mission.type}</p>
+                    {mission.comercio && (
+                        <p className="text-xs font-bold text-indigo-600">Comércio: {mission.comercio}</p>
+                    )}
                     <h2 id="mission-modal-title" className="mt-2 text-xl font-bold text-blue-900">{mission.title}</h2>
                     <p className="mt-3 text-sm leading-6 text-slate-500">{mission.description}</p>
                     <p className="mt-4 text-base font-bold text-emerald-600">Você ganhará +{mission.points} pontos ECO</p>

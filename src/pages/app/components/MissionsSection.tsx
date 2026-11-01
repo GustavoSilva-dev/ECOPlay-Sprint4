@@ -5,15 +5,11 @@ export interface Mission {
     id: number;
     title: string;
     points: number;
-    type: string;
-    expiresIn: string;
 }
 
-const data = new Date();
-
 const missions: Mission[] = [
-    { id: 1, title: "Plante ou cuide de uma muda", points: 60, type: "DIÁRIA", expiresIn: `${(data.getHours() - 24) * -1}h` },
-    { id: 2, title: "Limpe o ambiente", points: 20, type: "DIÁRIA", expiresIn: `${(data.getHours() - 24) * -1}h` },
+    { id: 1, title: "Plante ou cuide de uma muda", points: 60 },
+    { id: 2, title: "Limpe o ambiente", points: 20 },
 ];
 
 function MissionsSection() {
@@ -32,9 +28,6 @@ function MissionsSection() {
                             <PiPlantFill aria-hidden="true" className="transition-transform duration-300 group-hover:scale-125 group-hover:-rotate-12" />
                         </div>
                         <div className="min-w-0 flex-1">
-                            <p className="text-[0.65rem] font-bold tracking-wide text-emerald-600">
-                                {mission.type} <span className="font-medium text-slate-400">- Expira em {mission.expiresIn}</span>
-                            </p>
                             <h3 className="mt-1 truncate text-sm font-bold text-slate-800">{mission.title}</h3>
                             <p className="mt-1 text-xs font-semibold text-emerald-600">+{mission.points} pontos ECO</p>
                         </div>
