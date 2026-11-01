@@ -14,7 +14,7 @@ const navigationItems = [
     { label: 'Fluxograma', path: '/fluxograma' },
     { label: 'Contato', path: '/contato' },
     { label: 'FAQ', path: '/faq', active: true },
-    { label: 'Acesse a Plataforma', path: '/prototipo' }
+    { label: 'Acesse a Plataforma', path: '/plataforma' }
 ]
 
 function Header({ activePage }: headerProps) {

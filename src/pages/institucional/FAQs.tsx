@@ -86,7 +86,7 @@ function FAQs() {
                             );
                         })}
                     </div>
-                    <NextPageButton page="prototipo" className="self-end" label="Conhecer protótipo inicial"/>
+                    <NextPageButton page="plataforma" className="self-end" label="Conhecer plataforma"/>
                 </div>
             </main>
             <Footer />

@@ -10,7 +10,7 @@ function Home() {
             <Header />
             <div className="pt-18">
                 <TopBar />
-                <main className="mx-auto mt-6 max-w-4xl space-y-8 px-4 sm:px-6">
+                <main className="content-fade-in mx-auto mt-6 max-w-4xl space-y-8 px-4 sm:px-6">
                     <MissionsSection />
                     <QuickShortcuts />
                 </main>

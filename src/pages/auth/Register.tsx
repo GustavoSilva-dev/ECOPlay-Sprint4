@@ -24,7 +24,7 @@ const Register = () => {
 
         console.log(isLogin ? { email, senha: password } : { nome: name, email, senha: password });
         localStorage.setItem("user", JSON.stringify(isLogin ? { email, senha: password } : { nome: name, email, senha: password }));
-        setTimeout(() => navigate("/home"), 1800);
+        setTimeout(() => navigate("/plataforma/home"), 1800);
     };
 
     return (

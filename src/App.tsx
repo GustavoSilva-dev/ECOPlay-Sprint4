@@ -11,6 +11,7 @@ import FAQs from './pages/institucional/FAQs'
 import ContatoDinamico from './pages/institucional/ContatoDinamico'
 import Register from './pages/auth/Register'
 import AppHome from './pages/app/Home'
+import Missions from './pages/app/Missions'
 
 function App() {
 
@@ -25,8 +26,9 @@ function App() {
         <Route path="/contato" element={<Contato />}></Route>
         <Route path="/quem-somos/:id" element={<ContatoDinamico />}></Route>
         <Route path="/faq" element={<FAQs />}></Route>
-        <Route path="/prototipo" element={<Register />}></Route>
-        <Route path="/home" element={<AppHome />}></Route>
+        <Route path="/plataforma" element={<Register />}></Route>
+        <Route path="/plataforma/home" element={<AppHome />}></Route>
+        <Route path="/plataforma/missoes" element={<Missions />}></Route>
         <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>
     </BrowserRouter>

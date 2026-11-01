@@ -1,4 +1,5 @@
 import { PiPlantFill } from "react-icons/pi";
+import { useNavigate } from "react-router";
 
 export interface Mission {
     id: number;
@@ -16,11 +17,13 @@ const missions: Mission[] = [
 ];
 
 function MissionsSection() {
+    const navigate = useNavigate();
+
     return (
         <section aria-labelledby="missions-title" className="mt-20">
             <div className="mb-3 flex items-center justify-between">
                 <h2 id="missions-title" className="text-lg font-bold text-slate-800">Missões</h2>
-                <button type="button" className="text-xs font-semibold text-indigo-600 hover:text-indigo-800">Ver todas</button>
+                <button type="button" onClick={() => navigate("/plataforma/missoes")} className="text-xs font-semibold text-indigo-600 hover:text-indigo-800">Ver todas</button>
             </div>
             <div className="space-y-3">
                 {missions.map((mission) => (
@@ -35,7 +38,7 @@ function MissionsSection() {
                             <h3 className="mt-1 truncate text-sm font-bold text-slate-800">{mission.title}</h3>
                             <p className="mt-1 text-xs font-semibold text-emerald-600">+{mission.points} pontos ECO</p>
                         </div>
-                        <button type="button" className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 hover:scale-105 cursor-pointer">
+                        <button type="button" onClick={() => navigate("/plataforma/missoes")} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 hover:scale-105 cursor-pointer">
                             Ver
                         </button>
                     </article>
