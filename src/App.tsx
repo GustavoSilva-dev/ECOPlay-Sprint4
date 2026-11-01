@@ -9,7 +9,8 @@ import Fluxograma from './pages/institucional/Fluxograma'
 import Contato from './pages/institucional/Contato'
 import FAQs from './pages/institucional/FAQs'
 import ContatoDinamico from './pages/institucional/ContatoDinamico'
-import Register from './pages/auth/Register'
+import PlatformAccess from './components/PlatformAccess'
+import ProtectedRoute from './components/ProtectedRoute'
 import AppHome from './pages/app/Home'
 import Missions from './pages/app/Missions'
 import Comercios from './pages/app/Comercios'
@@ -28,11 +29,13 @@ function App() {
         <Route path="/contato" element={<Contato />}></Route>
         <Route path="/quem-somos/:id" element={<ContatoDinamico />}></Route>
         <Route path="/faq" element={<FAQs />}></Route>
-        <Route path="/plataforma" element={<Register />}></Route>
-        <Route path="/plataforma/home" element={<AppHome />}></Route>
-        <Route path="/plataforma/missoes" element={<Missions />}></Route>
-        <Route path="/plataforma/comercios" element={<Comercios />}></Route>
-        <Route path="/plataforma/recompensas" element={<Lootboxes />}></Route>
+        <Route path="/plataforma" element={<PlatformAccess />}></Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/plataforma/home" element={<AppHome />}></Route>
+          <Route path="/plataforma/missoes" element={<Missions />}></Route>
+          <Route path="/plataforma/comercios" element={<Comercios />}></Route>
+          <Route path="/plataforma/recompensas" element={<Lootboxes />}></Route>
+        </Route>
         <Route path="/*" element={<ErrorPage />}></Route>
       </Routes>
     </BrowserRouter>

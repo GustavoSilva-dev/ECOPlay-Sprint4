@@ -1,23 +1,36 @@
 import { getStoredUser } from "../../../types/user";
+import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router";
 
 function TopBar() {
     const user = getStoredUser();
     const points = user?.saldoPontos ?? 0;
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/plataforma", { replace: true });
+    };
 
     return (
-        <header className="border-b mt-[-5px] w-full border-slate-200 bg-white px-4 py-3 shadow-sm sm:px-6 fixed z-1000">
-            <div className="mx-auto flex max-w-4xl items-center justify-between">
-                <div className="flex items-center">
-                    <div>
-                        <p className="text-[1.2rem] font-['Nico_Moji',sans-serif] font-bold text-white bg-indigo-600 py-1 px-2 rounded-xl flex gap-2">
-                            <span className="font-medium hidden md:block">Plataforma</span>
-                            ECOPlay</p>
-                    </div>
+        <header className="fixed inset-x-0 top-0 z-1000 border-b border-slate-200 border-t-4 border-indigo-600 bg-white px-4 py-3 shadow-sm sm:px-6">
+            <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
+                <div className="rounded-2xl bg-linear-to-r from-[#5360FF] to-[#202658] px-3 py-2 font-['Nico_Moji',sans-serif] text-sm font-normal leading-none text-white sm:px-4 sm:text-2xl">
+                    Plataforma ECOPlay
                 </div>
-                <div className="flex items-center gap-3">
-                    <span className="rounded-full text-[0.8rem] font-['Nico_Moji',sans-serif] bg-emerald-50 px-3 py-1.5 text-xs text-emerald-700">
-                        <span className="font-bold text-[1rem]">{points.toLocaleString("pt-BR")}</span> ECOPoints
+                <div className="flex items-center gap-2 sm:gap-4">
+                    <span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 sm:px-4 font-['Nico_Moji',sans-serif] sm:text-sm">
+                        <span className="font-bold text-xl">{points.toLocaleString("pt-BR")}</span> ECOPoints
                     </span>
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        aria-label="Sair da plataforma"
+                        className="flex items-center gap-1 rounded-full px-2 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-red-600"
+                    >
+                        <FiLogOut aria-hidden="true" />
+                        <span className="hidden sm:inline">Sair</span>
+                    </button>
                 </div>
             </div>
         </header>
