@@ -1,75 +1,92 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsShop } from "react-icons/bs";
 import { FiSliders } from "react-icons/fi";
-import { PiLeafFill, PiPlantFill } from "react-icons/pi";
+import { PiLeafFill } from "react-icons/pi";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TopBar from "./components/TopBar";
 import MissionCard, { type MissionCardData } from "./components/MissionCard";
 import MissionCompletionModal from "./components/modal/MissionCompletionModal";
 import CreateMissionModal, { type CreateMissionPayload } from "./components/modal/CreateMissionModal";
+import { getStoredUser } from "../../types/user";
 
 type MissionCategory = "sustainable" | "local";
 
-const missions: Record<MissionCategory, MissionCardData[]> = {
-    sustainable: [
-        {
-            id: 1,
-            title: "Plante ou cuide de uma muda",
-            description: "Ajude uma planta a crescer e registre sua evolução.",
-            points: 60,
-            icon: PiPlantFill,
-            iconClassName: "bg-emerald-50 text-emerald-600",
-        },
-        {
-            id: 2,
-            title: "Limpe o ambiente",
-            description: "Recolha resíduos em um espaço público próximo de você.",
-            points: 20,
-            icon: PiLeafFill,
-            iconClassName: "bg-green-50 text-green-600",
-        },
-        {
-            id: 3,
-            title: "Separe seus recicláveis",
-            description: "Faça a separação correta dos materiais recicláveis da sua casa.",
-            points: 40,
-            icon: PiLeafFill,
-            iconClassName: "bg-lime-50 text-lime-600",
-        },
-    ],
-    local: [
-        {
-            id: 4,
-            title: "Compre de um comércio local",
-            description: "Apoie um parceiro da sua região e compartilhe sua experiência.",
-            points: 80,
-            comercio: "Padaria Verde",
-            icon: BsShop,
-            iconClassName: "bg-indigo-50 text-indigo-600",
-        },
-        {
-            id: 5,
-            title: "Conheça um parceiro ECOPlay",
-            description: "Visite um comércio participante e descubra uma nova opção sustentável.",
-            points: 50,
-            comercio: "Café Raiz Botânica",
-            icon: BsShop,
-            iconClassName: "bg-blue-50 text-blue-600",
-        },
-    ],
-};
+interface ApiMission {
+    id?: number;
+    idMissao?: number;
+    idComercio?: number;
+    nome?: string;
+    name?: string;
+    descricao?: string;
+    description?: string;
+    pontosRecompensa?: number;
+    pontos?: number;
+    nomeComercio?: string;
+}
+
+function mapMission(mission: ApiMission, category: MissionCategory): MissionCardData {
+    return {
+        id: mission.id ?? mission.idMissao ?? 0,
+        title: mission.nome ?? mission.name ?? "Missão",
+        description: mission.descricao ?? mission.description ?? "",
+        points: mission.pontosRecompensa ?? mission.pontos ?? 0,
+        comercio: mission.nomeComercio,
+        icon: category === "local" ? BsShop : PiLeafFill,
+        iconClassName: category === "local" ? "bg-indigo-50 text-indigo-600" : "bg-emerald-50 text-emerald-600",
+    };
+}
 
 function Missions() {
     const [activeCategory, setActiveCategory] = useState<MissionCategory>("sustainable");
+    const [missionList, setMissionList] = useState<MissionCardData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState("");
     const [completedMissionIds, setCompletedMissionIds] = useState<number[]>([]);
     const [selectedMissionId, setSelectedMissionId] = useState<number | null>(null);
     const [isConfirming, setIsConfirming] = useState(false);
     const [isCreateMissionModalOpen, setIsCreateMissionModalOpen] = useState(false);
+    const [isCreatingMission, setIsCreatingMission] = useState(false);
+    const [createErrorMessage, setCreateErrorMessage] = useState("");
+    const [missionsVersion, setMissionsVersion] = useState(0);
+    const user = getStoredUser();
 
-    const selectedMission = Object.values(missions)
-        .flat()
-        .find((mission) => mission.id === selectedMissionId);
+    const selectedMission = missionList.find((mission) => mission.id === selectedMissionId);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const fetchMissions = async () => {
+            setIsLoading(true);
+            setErrorMessage("");
+            try {
+                const endpoint = activeCategory === "sustainable" ? "/missoes/padroes" : "/missoes/comercio";
+                const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, { signal: controller.signal });
+
+                if (response.status === 204) {
+                    setMissionList([]);
+                } else if (response.ok) {
+                    const data: ApiMission[] = await response.json();
+                    setMissionList(data.map((mission) => mapMission(mission, activeCategory)));
+                } else {
+                    throw new Error(`Erro ao buscar missões: ${response.status}`);
+                }
+            } catch (error) {
+                if (error instanceof DOMException && error.name === "AbortError") {
+                    return;
+                }
+                console.error("Não foi possível carregar as missões.", error);
+                setErrorMessage("Não foi possível carregar as missões.");
+                setMissionList([]);
+            } finally {
+                if (!controller.signal.aborted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        void fetchMissions();
+        return () => controller.abort();
+    }, [activeCategory, missionsVersion]);
 
     const handleCompleteMission = (missionId: number) => {
         if (completedMissionIds.includes(missionId)) {
@@ -84,17 +101,59 @@ function Missions() {
             return;
         }
 
+        if (!user?.id) {
+            setErrorMessage("Não foi possível identificar o usuário.");
+            return;
+        }
+
         setIsConfirming(true);
-        window.setTimeout(() => {
+        void fetch(`${import.meta.env.VITE_API_URL}/missoes/concluir/${user.id}/${selectedMission.id}`, {
+            method: "POST",
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error(`Erro ao concluir missão: ${response.status}`);
+            }
             setCompletedMissionIds((completedIds) => [...completedIds, selectedMission.id]);
-            setIsConfirming(false);
             setSelectedMissionId(null);
-        }, 1000);
+        }).catch((error: unknown) => {
+            console.error("Não foi possível concluir a missão.", error);
+            setErrorMessage("Não foi possível concluir a missão.");
+        }).finally(() => setIsConfirming(false));
     };
 
-    const handleCreateMission = (payload: CreateMissionPayload) => {
-        void payload;
-        setIsCreateMissionModalOpen(false);
+    const handleCreateMission = async (payload: CreateMissionPayload) => {
+        const linkedCommerce = user?.comercioVinculado;
+        const idComercio = typeof linkedCommerce === "number"
+            ? linkedCommerce
+            : linkedCommerce?.id ?? linkedCommerce?.idComercio;
+
+        setIsCreatingMission(true);
+        setCreateErrorMessage("");
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/missoes`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idComercio,
+                    nome: payload.name,
+                    descricao: payload.description,
+                    pontosRecompensa: payload.ecopoints,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao criar missão: ${response.status}`);
+            }
+
+            setIsCreateMissionModalOpen(false);
+            setMissionsVersion((version) => version + 1);
+            setActiveCategory("local");
+        } catch (error) {
+            console.error("Não foi possível criar a missão.", error);
+            setCreateErrorMessage("Não foi possível criar a missão.");
+        } finally {
+            setIsCreatingMission(false);
+        }
     };
 
     return (
@@ -156,7 +215,13 @@ function Missions() {
                     </div>
 
                     <div className="space-y-4" role="tabpanel">
-                        {missions[activeCategory].map((mission) => (
+                        {isLoading ? (
+                            <p className="rounded-xl bg-white p-8 text-center text-slate-500">Carregando missões...</p>
+                        ) : errorMessage ? (
+                            <p className="rounded-xl bg-red-50 p-8 text-center font-semibold text-red-600" role="alert">{errorMessage}</p>
+                        ) : missionList.length === 0 ? (
+                            <p className="rounded-xl bg-white p-8 text-center text-slate-500">Nenhuma missão disponível nesta categoria.</p>
+                        ) : missionList.map((mission) => (
                             <MissionCard
                                 key={mission.id}
                                 mission={mission}
@@ -184,6 +249,8 @@ function Missions() {
                 <CreateMissionModal
                     onSubmit={handleCreateMission}
                     onClose={() => setIsCreateMissionModalOpen(false)}
+                    isSubmitting={isCreatingMission}
+                    errorMessage={createErrorMessage}
                 />
             )}
         </div>

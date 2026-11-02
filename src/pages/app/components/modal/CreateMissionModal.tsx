@@ -5,16 +5,18 @@ export interface CreateMissionPayload {
 }
 
 interface CreateMissionModalProps {
-    onSubmit: (payload: CreateMissionPayload) => void;
+    onSubmit: (payload: CreateMissionPayload) => void | Promise<void>;
     onClose: () => void;
+    isSubmitting?: boolean;
+    errorMessage?: string;
 }
 
-function CreateMissionModal({ onSubmit, onClose }: CreateMissionModalProps) {
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMessage }: CreateMissionModalProps) {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        onSubmit({
+        await onSubmit({
             name: String(formData.get("name") ?? "").trim(),
             description: String(formData.get("description") ?? "").trim(),
             ecopoints: Number(formData.get("ecopoints")),
@@ -83,18 +85,23 @@ function CreateMissionModal({ onSubmit, onClose }: CreateMissionModalProps) {
                     </div>
 
                     <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                        {errorMessage && (
+                            <p className="text-sm font-semibold text-red-600" role="alert">{errorMessage}</p>
+                        )}
                         <button
                             type="button"
                             onClick={onClose}
+                            disabled={isSubmitting}
                             className="rounded-full px-5 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
+                            disabled={isSubmitting}
                             className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
                         >
-                            Criar missão
+                            {isSubmitting ? "Criando..." : "Criar missão"}
                         </button>
                     </div>
                 </form>

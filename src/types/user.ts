@@ -5,6 +5,7 @@ export interface AuthenticatedUser {
     email: string;
     senha?: string;
     saldoPontos?: number;
+    comercioVinculado?: number | { id?: number; idComercio?: number } | null;
 }
 
 export function getStoredUser(): AuthenticatedUser | null {
