@@ -63,10 +63,10 @@ const Register = () => {
             <main className="px-3 pt-24 sm:px-8 sm:pb-8 sm:pt-28">
             <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-300 flex-col">
                 <div className="flex items-center justify-between gap-3 text-[0.7rem] font-bold sm:text-xs">
-                    <span className="rounded-full bg-[#e7f1ff] px-3 py-1.5 uppercase tracking-wide text-[#183f95] rotate-[-3deg]">
+                    <span className="rounded-full bg-[#e7f1ff] px-3 py-1.5 uppercase tracking-wide text-[#183f95] rotate-[-3deg] animate-pulse">
                         <span className="mr-1.5 text-[#159447]">●</span>15.000 ECOPoints
                     </span>
-                    <span className="rounded-full bg-[#e9ddff] px-3 py-1.5 text-[#6140b7] rotate-[3deg]">
+                    <span className="rounded-full bg-[#e9ddff] px-3 py-1.5 text-[#6140b7] rotate-[3deg] animate-pulse">
                         <span className="mr-1">✦</span>LOOTBOX Mítica
                     </span>
                 </div>
@@ -192,7 +192,8 @@ const Register = () => {
                         <div className="flex-1">
                             <div className="flex justify-between text-xs font-bold sm:text-sm">
                                 <span>Comunidade ECOPlay</span>
-                                <span className="text-[#087c59]">14.820 mudas plantadas</span>
+                                <span className="text-[#087c59] animate-bounce">
+                                    14.820 mudas plantadas</span>
                             </div>
                             <div className="mt-2 h-2 rounded-full bg-[#cbd7f4]">
                                 <div className="h-full w-3/4 rounded-full bg-[#087c59]" />

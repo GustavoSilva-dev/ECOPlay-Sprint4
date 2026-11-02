@@ -20,7 +20,7 @@ function RecompensaModal({ recompensa, onClose }: RecompensaModalProps) {
                 </div>
                 <p className="mt-5 text-xs font-bold uppercase tracking-wide text-emerald-600">Lootbox aberta!</p>
                 <h2 id="recompensa-modal-title" className="mt-2 text-2xl font-bold text-slate-800">Parabéns!</h2>
-                <p className="mt-3 text-base font-semibold text-blue-900">{recompensa.nome}</p>
+                <p className="mt-3 text-base font-semibold text-blue-900">{recompensa.nomeItem}</p>
                 <p className="mt-2 text-sm leading-6 text-slate-500">{recompensa.descricao}</p>
                 <button
                     type="button"

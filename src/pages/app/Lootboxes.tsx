@@ -5,8 +5,16 @@ import Footer from "../../components/Footer";
 import TopBar from "./components/TopBar";
 import LootboxCard from "./components/LootboxCard";
 import RecompensaModal from "./components/modal/RecompensaModal";
+import { getStoredUser } from "../../types/user";
 
 export interface Recompensa {
+    idInventario?: number;
+    raridade: string;
+    nomeItem: string;
+    descricao: string;
+}
+
+interface MockRecompensa {
     id: string;
     nome: string;
     descricao: string;
@@ -16,10 +24,10 @@ export interface Lootbox {
     id: string;
     nome: string;
     background?: string;
-    tipo: "COMUM" | "INCOMUM" | "ÉPICA" | "LENDÁRIO" | "MÍTICO";
+    tipo: "COMUM" | "INCOMUM" | "EPICA" | "LENDARIA" | "MITICA";
     preco: number;
     descricao: string;
-    recompensasPossiveis: Recompensa[];
+    recompensasPossiveis: MockRecompensa[];
 }
 
 const lootboxes: Lootbox[] = [
@@ -37,7 +45,7 @@ const lootboxes: Lootbox[] = [
     {
         id: "lendaria",
         nome: "Baú Épico",
-        tipo: "ÉPICA",
+        tipo: "EPICA",
         background: "bg-gradient-to-b from-gray-50 to-violet-200",
         preco: 750,
         descricao: "Vouchers de compras & badges raras",
@@ -61,7 +69,7 @@ const lootboxes: Lootbox[] = [
     {
         id: "lendario",
         nome: "Baú Lendário",
-        tipo: "LENDÁRIO",
+        tipo: "LENDARIA",
         background: "bg-gradient-to-b from-gray-50 to-yellow-200",
         preco: 1200,
         descricao: "Itens valiosos e recompensas de alto nível",
@@ -73,7 +81,7 @@ const lootboxes: Lootbox[] = [
     {
         id: "mitico",
         nome: "Baú Mítico",
-        tipo: "MÍTICO",
+        tipo: "MITICA",
         background: "bg-gradient-to-b from-gray-50 to-rose-200",
         preco: 2500,
         descricao: "Recompensas únicas para grandes conquistas",
@@ -87,17 +95,39 @@ const lootboxes: Lootbox[] = [
 function Lootboxes() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReward, setSelectedReward] = useState<Recompensa | null>(null);
+    const [openingLootboxId, setOpeningLootboxId] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    const handleAbrirLootbox = (lootboxId: string) => {
+    const handleAbrirLootbox = async (lootboxId: string) => {
         const lootbox = lootboxes.find((item) => item.id === lootboxId);
+        const user = getStoredUser();
 
-        if (!lootbox) {
+        if (!lootbox || !user?.email) {
+            setErrorMessage("Não foi possível identificar o usuário.");
             return;
         }
 
-        // TODO: Chamar API (POST) para registrar a compra da lootbox, deduzir saldo e retornar a recompensa gerada pelo backend
-        setSelectedReward(lootbox.recompensasPossiveis[0]);
-        setIsModalOpen(true);
+        setOpeningLootboxId(lootboxId);
+        setErrorMessage("");
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/lootbox/abrir/${encodeURIComponent(user.email)}/${lootbox.tipo}`,
+                { method: "POST" },
+            );
+
+            if (!response.ok) {
+                throw new Error(`Não foi possível abrir a lootbox: ${response.status}`);
+            }
+
+            const reward: Recompensa = await response.json();
+            setSelectedReward(reward);
+            setIsModalOpen(true);
+        } catch (error) {
+            console.error("Não foi possível abrir a lootbox.", error);
+            setErrorMessage("Não foi possível abrir a lootbox. Verifique seu saldo e tente novamente.");
+        } finally {
+            setOpeningLootboxId(null);
+        }
     };
 
     const handleCloseModal = () => {
@@ -119,6 +149,11 @@ function Lootboxes() {
                             <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">Recompensas e Lootboxes</h1>
                         </div>
                     </div>
+                    {errorMessage && (
+                        <p className="mb-6 rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-600" role="alert">
+                            {errorMessage}
+                        </p>
+                    )}
 
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Lootboxes disponíveis">
                         {lootboxes.map((lootbox) => (
@@ -127,6 +162,7 @@ function Lootboxes() {
                                 background={lootbox.background}
                                 lootbox={lootbox}
                                 onAcquire={() => handleAbrirLootbox(lootbox.id)}
+                                isOpening={openingLootboxId === lootbox.id}
                             />
                         ))}
                     </div>

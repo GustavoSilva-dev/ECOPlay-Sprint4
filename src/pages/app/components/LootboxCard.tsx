@@ -5,15 +5,16 @@ interface LootboxCardProps {
     lootbox: Lootbox;
     background?: string;
     onAcquire: () => void;
+    isOpening?: boolean;
 }
 
-function LootboxCard({ lootbox, background, onAcquire }: LootboxCardProps) {
+function LootboxCard({ lootbox, background, onAcquire, isOpening = false }: LootboxCardProps) {
     const typeStyles = {
         COMUM: "border-slate-200",
         INCOMUM: "border-green-200",
-        ÉPICA: "border-indigo-200",
-        LENDÁRIO: "border-amber-200",
-        MÍTICO: "border-purple-300",
+        EPICA: "border-indigo-200",
+        LENDARIA: "border-amber-200",
+        MITICA: "border-purple-300",
     };
 
     return (
@@ -37,10 +38,11 @@ function LootboxCard({ lootbox, background, onAcquire }: LootboxCardProps) {
             <button
                 type="button"
                 onClick={onAcquire}
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
+                disabled={isOpening}
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-70"
             >
                 {lootbox.tipo === "COMUM" ? <FiUnlock aria-hidden="true" /> : <FiLock aria-hidden="true" />}
-                Adquirir ({lootbox.preco} pts)
+                {isOpening ? "Abrindo..." : `Adquirir (${lootbox.preco} pts)`}
             </button>
         </article>
     );
