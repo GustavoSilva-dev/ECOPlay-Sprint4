@@ -5,8 +5,9 @@ import Footer from "../../components/Footer";
 import TopBar from "./components/TopBar";
 import ComercioCard, { type Comercio } from "./components/ComercioCard";
 import CriarComercioModal, { type CriarComercioPayload } from "./components/modal/CriarComercioModal";
+import { getStoredUser } from "../../types/user";
 
-const idUsuarioLogado = localStorage.getItem("user") ?? "{}" ? JSON.parse(localStorage.getItem("user") ?? "{}").id : null;
+const idUsuarioLogado = getStoredUser()?.id ?? null;
 
 function Comercios() {
     const [comercios, setComercios] = useState<Comercio[]>([]);
@@ -15,6 +16,7 @@ function Comercios() {
     const [isCreating, setIsCreating] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [createErrorMessage, setCreateErrorMessage] = useState("");
+    const [editingComercio, setEditingComercio] = useState<Comercio | null>(null);
     const [search, setSearch] = useState("");
     const [comerciosVersion, setComerciosVersion] = useState(0);
 
@@ -55,6 +57,49 @@ function Comercios() {
     }, [comerciosVersion]);
 
     const handleCreateComercio = async (payload: CriarComercioPayload) => {
+        if (editingComercio) {
+            if (editingComercio.id === undefined || editingComercio.idUsuario !== idUsuarioLogado) {
+                setCreateErrorMessage("Você só pode editar o seu comércio.");
+                return;
+            }
+
+            setIsCreating(true);
+            setCreateErrorMessage("");
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios/${editingComercio.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: editingComercio.id,
+                        idUsuario: idUsuarioLogado,
+                        idPlano: payload.idPlano,
+                        nome: payload.nome,
+                        planoAtivo: payload.planoAtivo,
+                        cnpj: payload.cnpj,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao editar comércio: ${response.status}`);
+                }
+
+                setIsModalOpen(false);
+                setEditingComercio(null);
+                setComerciosVersion((version) => version + 1);
+            } catch (error) {
+                console.error("Não foi possível editar o comércio.", error);
+                setCreateErrorMessage("Não foi possível editar o comércio.");
+            } finally {
+                setIsCreating(false);
+            }
+            return;
+        }
+
+        if (idUsuarioLogado === null) {
+            setCreateErrorMessage("Não foi possível identificar o usuário.");
+            return;
+        }
+
         setIsCreating(true);
         setCreateErrorMessage("");
 
@@ -71,8 +116,6 @@ function Comercios() {
                 }),
             });
 
-            console.log(`Resposta da API ao criar comércio: \n ${payload.idPlano} ${idUsuarioLogado} ${payload.nome} ${payload.planoAtivo} ${payload.cnpj}`);
-
             if (!response.ok) {
                 throw new Error(`Erro ao cadastrar comércio: ${response.status}`);
             }
@@ -84,6 +127,32 @@ function Comercios() {
             setCreateErrorMessage("Não foi possível cadastrar o comércio.");
         } finally {
             setIsCreating(false);
+        }
+    };
+
+    const handleDeleteComercio = async (comercio: Comercio) => {
+        if (comercio.id === undefined || comercio.idUsuario !== idUsuarioLogado) {
+            setErrorMessage("Você só pode excluir o seu comércio.");
+            return;
+        }
+
+        if (!window.confirm(`Deseja excluir o comércio "${comercio.nome}"?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios/${comercio.id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro ao excluir comércio: ${response.status}`);
+            }
+
+            setComerciosVersion((version) => version + 1);
+        } catch (error) {
+            console.error("Não foi possível excluir o comércio.", error);
+            setErrorMessage("Não foi possível excluir o comércio.");
         }
     };
 
@@ -109,6 +178,7 @@ function Comercios() {
                                 type="button"
                                 onClick={() => {
                                     setCreateErrorMessage("");
+                                    setEditingComercio(null);
                                     setIsModalOpen(true);
                                 }}
                                 className="rounded-full bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
@@ -143,7 +213,18 @@ function Comercios() {
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                             {filteredComercios.map((comercio) => (
                                 comercio.idUsuario === idUsuarioLogado ? (
-                                    <ComercioCard key={comercio.id ?? comercio.cnpj} comercio={comercio} background="bg-gradient-to-b from-[#ffffff] to-[#e2ffe0]" user={true}/>
+                                    <ComercioCard
+                                        key={comercio.id ?? comercio.cnpj}
+                                        comercio={comercio}
+                                        background="bg-gradient-to-b from-[#ffffff] to-[#e2ffe0]"
+                                        user={true}
+                                        onEdit={(selectedComercio) => {
+                                            setCreateErrorMessage("");
+                                            setEditingComercio(selectedComercio);
+                                            setIsModalOpen(true);
+                                        }}
+                                        onDelete={handleDeleteComercio}
+                                    />
                                 ) : (
                                     <ComercioCard key={comercio.id ?? comercio.cnpj} comercio={comercio} />
                                 )
@@ -164,10 +245,15 @@ function Comercios() {
             <Footer />
             {isModalOpen && (
                 <CriarComercioModal
+                    key={editingComercio?.id ?? "new"}
                     onSubmit={handleCreateComercio}
-                    onClose={() => setIsModalOpen(false)}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setEditingComercio(null);
+                    }}
                     isSubmitting={isCreating}
                     errorMessage={createErrorMessage}
+                    comercio={editingComercio ?? undefined}
                 />
             )}
         </div>

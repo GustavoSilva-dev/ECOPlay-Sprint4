@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
+import type { Comercio } from "../ComercioCard";
 
 export interface CriarComercioPayload {
     idPlano: number;
@@ -11,6 +12,7 @@ export interface CriarComercioPayload {
 interface CriarComercioModalProps {
     onSubmit: (payload: CriarComercioPayload) => void | Promise<void>;
     onClose: () => void;
+    comercio?: Comercio;
     isSubmitting?: boolean;
     errorMessage?: string;
 }
@@ -18,12 +20,13 @@ interface CriarComercioModalProps {
 function CriarComercioModal({
     onSubmit,
     onClose,
+    comercio,
     isSubmitting = false,
     errorMessage,
 }: CriarComercioModalProps) {
-    const [nome, setNome] = useState("");
-    const [cnpj, setCnpj] = useState("");
-    const [idPlano, setIdPlano] = useState("1");
+    const [nome, setNome] = useState(comercio?.nome ?? "");
+    const [cnpj, setCnpj] = useState(comercio?.cnpj ?? "");
+    const [idPlano, setIdPlano] = useState(String(comercio?.idPlano ?? 1));
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -40,11 +43,11 @@ function CriarComercioModal({
             <div
                 role="dialog"
                 aria-modal="true"
-                aria-labelledby="create-commerce-modal-title"
+                aria-labelledby="commerce-modal-title"
                 className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
             >
-                <h2 id="create-commerce-modal-title" className="text-xl font-bold text-blue-900">
-                    Cadastrar Comércio
+                <h2 id="commerce-modal-title" className="text-xl font-bold text-blue-900">
+                    {comercio ? "Editar Comércio" : "Cadastrar Comércio"}
                 </h2>
 
                 <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -115,7 +118,7 @@ function CriarComercioModal({
                             disabled={isSubmitting}
                             className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
                         >
-                            {isSubmitting ? "Cadastrando..." : "Cadastrar comércio"}
+                            {isSubmitting ? "Salvando..." : comercio ? "Salvar alterações" : "Cadastrar comércio"}
                         </button>
                     </div>
                 </form>

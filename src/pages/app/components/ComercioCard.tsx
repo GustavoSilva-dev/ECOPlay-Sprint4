@@ -1,4 +1,5 @@
 import { BsShop } from "react-icons/bs";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 export interface Comercio {
     id?: number;
@@ -13,6 +14,8 @@ interface ComercioCardProps {
     comercio: Comercio;
     background?: string;
     user?: boolean;
+    onEdit?: (comercio: Comercio) => void;
+    onDelete?: (comercio: Comercio) => void;
 }
 
 function formatCnpj(cnpj: string) {
@@ -26,7 +29,7 @@ function formatCnpj(cnpj: string) {
 }
 
 
-function ComercioCard({ comercio, background, user}: ComercioCardProps) {
+function ComercioCard({ comercio, background, user, onEdit, onDelete }: ComercioCardProps) {
     return (
         <article className={`flex aspect-square flex-col items-center justify-between rounded-2xl ${background || "bg-white"} p-6 text-center shadow-md transition-shadow hover:shadow-lg`}>
             <span className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-4xl text-blue-600">
@@ -43,13 +46,35 @@ function ComercioCard({ comercio, background, user}: ComercioCardProps) {
                 <span className="block text-lg font-bold text-slate-800">{comercio.nome}</span>
                 <span className="mt-1 block text-sm text-slate-500">{formatCnpj(comercio.cnpj)}</span>
             </span>
-            <span
-                className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                    comercio.planoAtivo ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
-                }`}
-            >
-                {comercio.planoAtivo ? "ECOPartner Ativo" : "Sem plano ativo"}
-            </span>
+            <div className="flex items-center gap-2">
+                <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                        comercio.planoAtivo ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                    }`}
+                >
+                    {comercio.planoAtivo ? "ECOPartner Ativo" : "Sem plano ativo"}
+                </span>
+                {user && onEdit && onDelete && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => onEdit(comercio)}
+                            aria-label={`Editar ${comercio.nome}`}
+                            className="rounded-full p-2 text-blue-600 transition hover:bg-blue-50"
+                        >
+                            <FiEdit2 aria-hidden="true" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onDelete(comercio)}
+                            aria-label={`Excluir ${comercio.nome}`}
+                            className="rounded-full p-2 text-red-600 transition hover:bg-red-50"
+                        >
+                            <FiTrash2 aria-hidden="true" />
+                        </button>
+                    </>
+                )}
+            </div>
         </article>
     );
 }
