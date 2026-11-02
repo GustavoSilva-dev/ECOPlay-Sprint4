@@ -19,9 +19,16 @@ function TopBar() {
                     Plataforma ECOPlay
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4">
+                    {localStorage.getItem("user") && (
+                        <span title={user?.nickName} className="rounded-full cursor-default bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 sm:px-4 sm:text-sm border-2 border-emerald-800">
+                            {user?.nickName?.slice(0,1).toUpperCase()}
+                        </span>
+                    )}
+
                     <span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 sm:px-4 font-['Nico_Moji',sans-serif] sm:text-sm">
                         <span className="font-bold text-xl">{points.toLocaleString("pt-BR")}</span> ECOPoints
                     </span>
+
                     <button
                         type="button"
                         onClick={handleLogout}
