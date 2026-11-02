@@ -15,7 +15,7 @@ function Home() {
                 <TopBar />
                 <main className="content-fade-in mx-auto mt-6 max-w-4xl space-y-8 px-4 sm:px-6">
                     <p className="sm:text-xl text-lg font-semibold text-indigo-900 pt-15">
-                        Ola, <b>{getUserDisplayName(user)}</b>! <br/> Bem-vindo ao ECOPlay.
+                        Olá, <b>{getUserDisplayName(user)}</b>! <br/> Bem-vindo ao ECOPlay.
                     </p>
                     <MissionsSection />
                     <QuickShortcuts />

@@ -23,7 +23,7 @@ function Comercios() {
     );
 
     return (
-        <div className="flex min-h-screen flex-col bg-gray-50 font-['Montserrat',sans-serif] text-slate-800">
+        <div className="flex min-h-screen flex-col bg-gradient-to-br from-[#fff] to-[#e1e2fe] font-['Montserrat',sans-serif] text-slate-800">
             <Header />
             <div className="pt-18">
                 <TopBar />
