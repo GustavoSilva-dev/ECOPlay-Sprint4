@@ -1,22 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import TopBar from "./components/TopBar";
 import ComercioCard, { type Comercio } from "./components/ComercioCard";
+import CriarComercioModal, { type CriarComercioPayload } from "./components/modal/CriarComercioModal";
 
-const mockComercios: Comercio[] = [
-    { id: "1", nome: "Padaria Verde", categoria: "alimentacao", missoesAtivas: 2 },
-    { id: "2", nome: "Feira Orgânica", categoria: "hortifruti", missoesAtivas: 1 },
-    { id: "3", nome: "Café Raiz Botânica", categoria: "cafe", missoesAtivas: 3 },
-    { id: "4", nome: "Mercado Circular", categoria: "alimentacao", missoesAtivas: 2 },
-    { id: "5", nome: "Horta da Praça", categoria: "hortifruti", missoesAtivas: 1 },
-    { id: "6", nome: "Café do Bairro", categoria: "cafe", missoesAtivas: 4 },
-];
+const idUsuarioLogado = localStorage.getItem("user") ?? "{}" ? JSON.parse(localStorage.getItem("user") ?? "{}").id : null;
 
 function Comercios() {
-    const [comercios] = useState<Comercio[]>(mockComercios);
+    const [comercios, setComercios] = useState<Comercio[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreating, setIsCreating] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [createErrorMessage, setCreateErrorMessage] = useState("");
     const [search, setSearch] = useState("");
+    const [comerciosVersion, setComerciosVersion] = useState(0);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const fetchComercios = async () => {
+            setIsLoading(true);
+            setErrorMessage("");
+
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios`, { signal: controller.signal });
+
+                if (response.status === 204) {
+                    setComercios([]);
+                } else if (response.ok) {
+                    const data: Comercio[] = await response.json();
+                    setComercios(data);
+                } else {
+                    throw new Error(`Erro ao buscar comércios: ${response.status}`);
+                }
+            } catch (error) {
+                if (error instanceof DOMException && error.name === "AbortError") {
+                    return;
+                }
+
+                console.error("Não foi possível carregar os comércios.", error);
+                setErrorMessage("Não foi possível carregar os comércios.");
+                setComercios([]);
+            } finally {
+                if (!controller.signal.aborted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        void fetchComercios();
+        return () => controller.abort();
+    }, [comerciosVersion]);
+
+    const handleCreateComercio = async (payload: CriarComercioPayload) => {
+        setIsCreating(true);
+        setCreateErrorMessage("");
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    idUsuario: idUsuarioLogado,
+                    idPlano: payload.idPlano,
+                    nome: payload.nome,
+                    planoAtivo: payload.planoAtivo,
+                    cnpj: payload.cnpj
+                }),
+            });
+
+            console.log(`Resposta da API ao criar comércio: \n ${payload.idPlano} ${idUsuarioLogado} ${payload.nome} ${payload.planoAtivo} ${payload.cnpj}`);
+
+            if (!response.ok) {
+                throw new Error(`Erro ao cadastrar comércio: ${response.status}`);
+            }
+
+            setIsModalOpen(false);
+            setComerciosVersion((version) => version + 1);
+        } catch (error) {
+            console.error("Não foi possível cadastrar o comércio.", error);
+            setCreateErrorMessage("Não foi possível cadastrar o comércio.");
+        } finally {
+            setIsCreating(false);
+        }
+    };
 
     const filteredComercios = comercios.filter((comercio) =>
         comercio.nome.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
@@ -35,24 +104,54 @@ function Comercios() {
                                 Descubra parceiros, complete missões comerciais e fortaleça a economia da sua região.
                             </p>
                         </div>
-                        <label className="flex w-full items-center gap-2 rounded-full bg-white px-4 py-3 text-slate-400 shadow-sm sm:max-w-xs">
-                            <FiSearch aria-hidden="true" />
-                            <span className="sr-only">Buscar comércio</span>
-                            <input
-                                type="search"
-                                value={search}
-                                onChange={(event) => setSearch(event.target.value)}
-                                placeholder="Buscar comércio"
-                                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
-                            />
-                        </label>
+                        <div className="flex w-full flex-col gap-3 sm:w-auto sm:items-end">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setCreateErrorMessage("");
+                                    setIsModalOpen(true);
+                                }}
+                                className="rounded-full bg-blue-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+                            >
+                                Cadastrar Comércio
+                            </button>
+                            <label className="flex w-full items-center gap-2 rounded-full bg-white px-4 py-3 text-slate-400 shadow-sm sm:max-w-xs">
+                                <FiSearch aria-hidden="true" />
+                                <span className="sr-only">Buscar comércio</span>
+                                <input
+                                    type="search"
+                                    value={search}
+                                    onChange={(event) => setSearch(event.target.value)}
+                                    placeholder="Buscar comércio"
+                                    className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                                />
+                            </label>
+                        </div>
                     </div>
 
-                    {filteredComercios.length > 0 ? (
+                    {errorMessage && (
+                        <p className="mb-6 rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-600" role="alert">
+                            {errorMessage}
+                        </p>
+                    )}
+
+                    {isLoading ? (
+                        <p className="rounded-2xl bg-white px-6 py-12 text-center font-semibold text-slate-500 shadow-sm">
+                            Carregando comércios...
+                        </p>
+                    ) : filteredComercios.length > 0 ? (
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                             {filteredComercios.map((comercio) => (
-                                <ComercioCard key={comercio.id} comercio={comercio} />
+                                comercio.idUsuario === idUsuarioLogado ? (
+                                    <ComercioCard key={comercio.id ?? comercio.cnpj} comercio={comercio} background="bg-gradient-to-b from-[#ffffff] to-[#e2ffe0]" user={true}/>
+                                ) : (
+                                    <ComercioCard key={comercio.id ?? comercio.cnpj} comercio={comercio} />
+                                )
                             ))}
+                        </div>
+                    ) : comercios.length === 0 ? (
+                        <div className="rounded-2xl bg-white px-6 py-12 text-center shadow-sm">
+                            <p className="font-bold text-slate-800">Nenhum comércio cadastrado.</p>
                         </div>
                     ) : (
                         <div className="rounded-2xl bg-white px-6 py-12 text-center shadow-sm">
@@ -63,6 +162,14 @@ function Comercios() {
                 </main>
             </div>
             <Footer />
+            {isModalOpen && (
+                <CriarComercioModal
+                    onSubmit={handleCreateComercio}
+                    onClose={() => setIsModalOpen(false)}
+                    isSubmitting={isCreating}
+                    errorMessage={createErrorMessage}
+                />
+            )}
         </div>
     );
 }

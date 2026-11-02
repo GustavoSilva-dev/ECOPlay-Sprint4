@@ -1,48 +1,56 @@
-import { FiCoffee, FiMapPin, FiShoppingBag, FiTarget } from "react-icons/fi";
+import { BsShop } from "react-icons/bs";
 
 export interface Comercio {
-    id: string;
+    id?: number;
+    idUsuario: number;
+    idPlano: number;
     nome: string;
-    categoria: string;
-    missoesAtivas: number;
+    planoAtivo: boolean;
+    cnpj: string;
 }
 
 interface ComercioCardProps {
     comercio: Comercio;
+    background?: string;
+    user?: boolean;
 }
 
-const categoryIcons = {
-    alimentacao: FiShoppingBag,
-    cafe: FiCoffee,
-    hortifruti: FiMapPin,
-} as const;
+function formatCnpj(cnpj: string) {
+    const digits = cnpj.replace(/\D/g, "");
 
-function ComercioCard({ comercio }: ComercioCardProps) {
-    const Icon = categoryIcons[comercio.categoria as keyof typeof categoryIcons] ?? FiMapPin;
+    if (digits.length !== 14) {
+        return cnpj;
+    }
 
-    const handleClick = () => {
-        console.log("Navegar para detalhes do comércio ID:", comercio.id);
-        // TODO: Implementar rota de detalhes do comércio usando react-router-dom
-    };
+    return digits.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+}
 
+
+function ComercioCard({ comercio, background, user}: ComercioCardProps) {
     return (
-        <button
-            type="button"
-            onClick={handleClick}
-            className="flex aspect-square cursor-pointer flex-col items-center justify-between rounded-2xl bg-white p-6 text-center shadow-md transition-shadow hover:shadow-lg"
-        >
+        <article className={`flex aspect-square flex-col items-center justify-between rounded-2xl ${background || "bg-white"} p-6 text-center shadow-md transition-shadow hover:shadow-lg`}>
             <span className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-4xl text-blue-600">
-                <Icon aria-hidden="true" />
+                <BsShop aria-hidden="true" />
             </span>
+
+            {user && (
+                <span className="mt-2 block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-600">
+                    Seu Comércio
+                </span>
+            )}
+            
             <span className="px-2">
                 <span className="block text-lg font-bold text-slate-800">{comercio.nome}</span>
-                <span className="mt-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">{comercio.categoria}</span>
+                <span className="mt-1 block text-sm text-slate-500">{formatCnpj(comercio.cnpj)}</span>
             </span>
-            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-green-600">
-                <FiTarget aria-hidden="true" />
-                {comercio.missoesAtivas} {comercio.missoesAtivas === 1 ? "missão ativa" : "missões ativas"}
+            <span
+                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                    comercio.planoAtivo ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
+                }`}
+            >
+                {comercio.planoAtivo ? "ECOPartner Ativo" : "Sem plano ativo"}
             </span>
-        </button>
+        </article>
     );
 }
 
