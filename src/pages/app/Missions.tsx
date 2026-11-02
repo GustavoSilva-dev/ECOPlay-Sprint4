@@ -122,11 +122,6 @@ function Missions() {
     };
 
     const handleCreateMission = async (payload: CreateMissionPayload) => {
-        const linkedCommerce = user?.comercioVinculado;
-        const idComercio = typeof linkedCommerce === "number"
-            ? linkedCommerce
-            : linkedCommerce?.id ?? linkedCommerce?.idComercio;
-
         setIsCreatingMission(true);
         setCreateErrorMessage("");
         try {
@@ -134,7 +129,7 @@ function Missions() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    idComercio,
+                    idComercio: payload.idComercio,
                     nome: payload.name,
                     descricao: payload.description,
                     pontosRecompensa: payload.ecopoints,

@@ -1,4 +1,5 @@
 export interface CreateMissionPayload {
+    idComercio: number;
     name: string;
     description: string;
     ecopoints: number;
@@ -17,6 +18,7 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
 
         const formData = new FormData(event.currentTarget);
         await onSubmit({
+            idComercio: Number(formData.get("idComercio")),
             name: String(formData.get("name") ?? "").trim(),
             description: String(formData.get("description") ?? "").trim(),
             ecopoints: Number(formData.get("ecopoints")),
@@ -50,6 +52,22 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
                             type="text"
                             required
                             placeholder="Ex.: Recolha resíduos na sua rua"
+                            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="mission-commerce-id" className="mb-1.5 block text-sm font-bold text-slate-700">
+                            CÓDIGO DE COMÉRCIO
+                        </label>
+                        <input
+                            id="mission-commerce-id"
+                            name="idComercio"
+                            type="number"
+                            min="1"
+                            step="1"
+                            required
+                            placeholder="Associe o ID do comércio ligado a essa missão"
                             className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         />
                     </div>
