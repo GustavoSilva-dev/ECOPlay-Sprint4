@@ -27,9 +27,46 @@ const Register = () => {
         setErrorMessage("");
 
         if (!isLogin) {
-            const newUser = { nome: name, email, senha: password };
-            updateUser(newUser);
-            window.setTimeout(() => navigate("/plataforma/home"), 1000);
+            const apiUrl = import.meta.env.VITE_API_URL;
+
+            try {
+                const createResponse = await fetch(`${apiUrl}/usuarios`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        nickName: name.trim(),
+                        email: email.trim(),
+                        senha: password,
+                    }),
+                });
+
+                if (!createResponse.ok) {
+                    throw new Error(`Account creation failed with status ${createResponse.status}`);
+                }
+
+                const loginResponse = await fetch(`${apiUrl}/usuarios/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: email.trim(), senha: password }),
+                });
+
+                if (!loginResponse.ok) {
+                    throw new Error(`Login after account creation failed with status ${loginResponse.status}`);
+                }
+
+                const user = await loginResponse.json();
+                updateUser(user);
+                navigate("/plataforma/home");
+            } catch (error) {
+                console.error("Não foi possível criar a conta.", error);
+                setErrorMessage("Não foi possível criar a conta. Verifique os dados e tente novamente.");
+                setIsLoading(false);
+            }
+
             return;
         }
 
