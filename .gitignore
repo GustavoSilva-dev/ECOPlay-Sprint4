@@ -9,11 +9,10 @@ lerna-debug.log*
 
 node_modules
 dist
+.env
 .adds
 dist-ssr
 *.local
-
-/ECOPlay - Site Apresentativo Challenge/
 
 # Editor directories and files
 .vscode/*
