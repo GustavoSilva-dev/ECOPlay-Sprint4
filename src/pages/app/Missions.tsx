@@ -8,7 +8,7 @@ import TopBar from "./components/TopBar";
 import MissionCard, { type MissionCardData } from "./components/MissionCard";
 import MissionCompletionModal from "./components/modal/MissionCompletionModal";
 import CreateMissionModal, { type CreateMissionPayload } from "./components/modal/CreateMissionModal";
-import { getStoredUser } from "../../types/user";
+import { useUser } from "../../types/user";
 
 type MissionCategory = "sustainable" | "local";
 
@@ -49,7 +49,7 @@ function Missions() {
     const [isCreatingMission, setIsCreatingMission] = useState(false);
     const [createErrorMessage, setCreateErrorMessage] = useState("");
     const [missionsVersion, setMissionsVersion] = useState(0);
-    const user = getStoredUser();
+    const { user, updateUser, syncUserFromResponse } = useUser();
 
     const selectedMission = missionList.find((mission) => mission.id === selectedMissionId);
 
@@ -109,9 +109,13 @@ function Missions() {
         setIsConfirming(true);
         void fetch(`${import.meta.env.VITE_API_URL}/missoes/concluir/${user.id}/${selectedMission.id}`, {
             method: "POST",
-        }).then((response) => {
+        }).then(async (response) => {
             if (!response.ok) {
                 throw new Error(`Erro ao concluir missão: ${response.status}`);
+            }
+            const responseUser = await syncUserFromResponse(response);
+            if (!responseUser || !("saldoPontos" in responseUser)) {
+                updateUser({ saldoPontos: (user.saldoPontos ?? 0) + selectedMission.points });
             }
             setCompletedMissionIds((completedIds) => [...completedIds, selectedMission.id]);
             setSelectedMissionId(null);
@@ -142,7 +146,7 @@ function Missions() {
 
             setIsCreateMissionModalOpen(false);
             setMissionsVersion((version) => version + 1);
-            setActiveCategory("local");
+            setActiveCategory(payload.idComercio === null ? "sustainable" : "local");
         } catch (error) {
             console.error("Não foi possível criar a missão.", error);
             setCreateErrorMessage("Não foi possível criar a missão.");
@@ -162,6 +166,9 @@ function Missions() {
                             <h1 className="text-2xl font-bold text-blue-900 sm:text-3xl">Missões Disponíveis</h1>
                             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
                                 Complete desafios ecológicos e apoie comerciantes da sua região para subir de nível!
+                            </p>
+                            <p className="mt-2 max-w-2xl text-sm leading-6 font-bold text-slate-500 sm:text-base">
+                                * Todas as missões podem ser concluídas múltiplas vezes.
                             </p>
                         </div>
                         <div className="flex shrink-0 items-center gap-2">

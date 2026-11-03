@@ -130,32 +130,6 @@ function Comercios() {
         }
     };
 
-    const handleDeleteComercio = async (comercio: Comercio) => {
-        if (comercio.id === undefined || comercio.idUsuario !== idUsuarioLogado) {
-            setErrorMessage("Você só pode excluir o seu comércio.");
-            return;
-        }
-
-        if (!window.confirm(`Deseja excluir o comércio "${comercio.nome}"?`)) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios/${comercio.id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro ao excluir comércio: ${response.status}`);
-            }
-
-            setComerciosVersion((version) => version + 1);
-        } catch (error) {
-            console.error("Não foi possível excluir o comércio.", error);
-            setErrorMessage("Não foi possível excluir o comércio.");
-        }
-    };
-
     const filteredComercios = comercios.filter((comercio) =>
         comercio.nome.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
     );
@@ -216,14 +190,13 @@ function Comercios() {
                                     <ComercioCard
                                         key={comercio.id ?? comercio.cnpj}
                                         comercio={comercio}
-                                        background="bg-gradient-to-b from-[#ffffff] to-[#e2ffe0]"
+                                        background="bg-gradient-to-b from-[#ffffff] to-[#f1fff0]"
                                         user={true}
                                         onEdit={(selectedComercio) => {
                                             setCreateErrorMessage("");
                                             setEditingComercio(selectedComercio);
                                             setIsModalOpen(true);
                                         }}
-                                        onDelete={handleDeleteComercio}
                                     />
                                 ) : (
                                     <ComercioCard key={comercio.id ?? comercio.cnpj} comercio={comercio} />

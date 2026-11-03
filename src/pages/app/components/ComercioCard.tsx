@@ -1,5 +1,5 @@
 import { BsShop } from "react-icons/bs";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEdit2 } from "react-icons/fi";
 
 export interface Comercio {
     id?: number;
@@ -15,7 +15,6 @@ interface ComercioCardProps {
     background?: string;
     user?: boolean;
     onEdit?: (comercio: Comercio) => void;
-    onDelete?: (comercio: Comercio) => void;
 }
 
 function formatCnpj(cnpj: string) {
@@ -29,7 +28,7 @@ function formatCnpj(cnpj: string) {
 }
 
 
-function ComercioCard({ comercio, background, user, onEdit, onDelete }: ComercioCardProps) {
+function ComercioCard({ comercio, background, user, onEdit }: ComercioCardProps) {
     return (
         <article className={`flex aspect-square flex-col items-center justify-between rounded-2xl ${background || "bg-white"} p-6 text-center shadow-md transition-shadow hover:shadow-lg`}>
             <span className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-4xl text-blue-600">
@@ -45,6 +44,11 @@ function ComercioCard({ comercio, background, user, onEdit, onDelete }: Comercio
             <span className="px-2">
                 <span className="block text-lg font-bold text-slate-800">{comercio.nome}</span>
                 <span className="mt-1 block text-sm text-slate-500">{formatCnpj(comercio.cnpj)}</span>
+                {user && comercio.id !== undefined && (
+                    <span className="mt-2 block text-xs font-semibold text-slate-500">
+                        CÓDIGO DO COMÉRCIO: {comercio.id}
+                    </span>
+                )}
             </span>
             <div className="flex items-center gap-2">
                 <span
@@ -54,25 +58,15 @@ function ComercioCard({ comercio, background, user, onEdit, onDelete }: Comercio
                 >
                     {comercio.planoAtivo ? "ECOPartner Ativo" : "Sem plano ativo"}
                 </span>
-                {user && onEdit && onDelete && (
-                    <>
-                        <button
-                            type="button"
-                            onClick={() => onEdit(comercio)}
-                            aria-label={`Editar ${comercio.nome}`}
-                            className="rounded-full p-2 text-blue-600 transition hover:bg-blue-50"
-                        >
-                            <FiEdit2 aria-hidden="true" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => onDelete(comercio)}
-                            aria-label={`Excluir ${comercio.nome}`}
-                            className="rounded-full p-2 text-red-600 transition hover:bg-red-50"
-                        >
-                            <FiTrash2 aria-hidden="true" />
-                        </button>
-                    </>
+                {user && onEdit && (
+                    <button
+                        type="button"
+                        onClick={() => onEdit(comercio)}
+                        aria-label={`Editar ${comercio.nome}`}
+                        className="rounded-full p-2 text-blue-600 transition hover:bg-blue-50"
+                    >
+                        <FiEdit2 aria-hidden="true" />
+                    </button>
                 )}
             </div>
         </article>

@@ -5,7 +5,7 @@ import Footer from "../../components/Footer";
 import TopBar from "./components/TopBar";
 import LootboxCard from "./components/LootboxCard";
 import RecompensaModal from "./components/modal/RecompensaModal";
-import { getStoredUser } from "../../types/user";
+import { useUser } from "../../types/user";
 
 export interface Recompensa {
     idInventario?: number;
@@ -97,11 +97,10 @@ function Lootboxes() {
     const [selectedReward, setSelectedReward] = useState<Recompensa | null>(null);
     const [openingLootboxId, setOpeningLootboxId] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
+    const { user, updateUser, syncUserFromResponse } = useUser();
 
     const handleAbrirLootbox = async (lootboxId: string) => {
         const lootbox = lootboxes.find((item) => item.id === lootboxId);
-        const user = getStoredUser();
-
         if (!lootbox || !user?.email) {
             setErrorMessage("Não foi possível identificar o usuário.");
             return;
@@ -119,6 +118,10 @@ function Lootboxes() {
                 throw new Error(`Não foi possível abrir a lootbox: ${response.status}`);
             }
 
+            const responseUser = await syncUserFromResponse(response);
+            if (!responseUser || !("saldoPontos" in responseUser)) {
+                updateUser({ saldoPontos: (user.saldoPontos ?? 0) - lootbox.preco });
+            }
             const reward: Recompensa = await response.json();
             setSelectedReward(reward);
             setIsModalOpen(true);

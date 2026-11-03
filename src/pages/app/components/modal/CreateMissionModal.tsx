@@ -1,5 +1,8 @@
+import type { FormEvent } from "react";
+import { useState } from "react";
+
 export interface CreateMissionPayload {
-    idComercio: number;
+    idComercio: number | null;
     name: string;
     description: string;
     ecopoints: number;
@@ -13,12 +16,14 @@ interface CreateMissionModalProps {
 }
 
 function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMessage }: CreateMissionModalProps) {
+    const [missionType, setMissionType] = useState<"sustainable" | "local">("local");
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
         await onSubmit({
-            idComercio: Number(formData.get("idComercio")),
+            idComercio: missionType === "local" ? Number(formData.get("idComercio")) : null,
             name: String(formData.get("name") ?? "").trim(),
             description: String(formData.get("description") ?? "").trim(),
             ecopoints: Number(formData.get("ecopoints")),
@@ -43,6 +48,21 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
 
                 <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
                     <div>
+                        <label htmlFor="mission-type" className="mb-1.5 block text-sm font-bold text-slate-700">
+                            TIPO DE MISSÃO
+                        </label>
+                        <select
+                            id="mission-type"
+                            value={missionType}
+                            onChange={(event) => setMissionType(event.target.value as "sustainable" | "local")}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                        >
+                            <option value="local">Comércio Local</option>
+                            <option value="sustainable">Sustentável</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label htmlFor="mission-name" className="mb-1.5 block text-sm font-bold text-slate-700">
                             NOME DA MISSÃO
                         </label>
@@ -56,6 +76,7 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
                         />
                     </div>
 
+                    {missionType === "local" && (
                     <div>
                         <label htmlFor="mission-commerce-id" className="mb-1.5 block text-sm font-bold text-slate-700">
                             CÓDIGO DE COMÉRCIO
@@ -66,11 +87,12 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
                             type="number"
                             min="1"
                             step="1"
-                            required
+                            required={missionType === "local"}
                             placeholder="Associe o ID do comércio ligado a essa missão"
                             className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                         />
                     </div>
+                    )}
 
                     <div>
                         <label htmlFor="mission-description" className="mb-1.5 block text-sm font-bold text-slate-700">
@@ -129,4 +151,3 @@ function CreateMissionModal({ onSubmit, onClose, isSubmitting = false, errorMess
 }
 
 export default CreateMissionModal;
-import type { FormEvent } from "react";

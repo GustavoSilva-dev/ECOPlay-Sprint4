@@ -22,7 +22,8 @@ function MissionCompletionModal({ mission, isConfirming, onConfirm, onClose }: M
                     <Icon aria-hidden="true" />
                 </div>
                 <div className="mt-5 text-center">
-                    {mission.comercio && (
+                    {mission.comercio
+                     && (
                         <p className="text-xs font-bold text-indigo-600">Comércio: {mission.comercio}</p>
                     )}
                     <h2 id="mission-modal-title" className="mt-2 text-xl font-bold text-blue-900">{mission.title}</h2>

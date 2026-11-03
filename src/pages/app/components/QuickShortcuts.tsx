@@ -25,7 +25,7 @@ function QuickShortcuts() {
     const navigate = useNavigate();
 
     return (
-        <section aria-labelledby="shortcuts-title" className="mb-20">
+        <section aria-labelledby="shortcuts-title" className="mb-10">
             <div className="mb-3 flex items-center justify-between">
                 <h2 id="shortcuts-title" className="text-lg font-bold text-slate-800">Atalhos Rápidos</h2>
                 <span className="text-[0.65rem] font-semibold tracking-wide text-slate-500">AÇÕES</span>

@@ -1,14 +1,14 @@
-import { getStoredUser } from "../../../types/user";
+import { useUser } from "../../../types/user";
 import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from "react-router";
 
 function TopBar() {
-    const user = getStoredUser();
+    const { user, clearUser } = useUser();
     const points = user?.saldoPontos ?? 0;
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("user");
+        clearUser();
         navigate("/plataforma", { replace: true });
     };
 

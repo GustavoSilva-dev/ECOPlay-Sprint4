@@ -15,12 +15,14 @@ import AppHome from './pages/app/Home'
 import Missions from './pages/app/Missions'
 import Comercios from './pages/app/Comercios'
 import Lootboxes from './pages/app/Lootboxes'
+import { UserProvider } from './types/user'
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/sobre" element={<Sobre />}></Route>
         <Route path="/quem-somos" element={<QuemSomos />}></Route>
@@ -37,8 +39,9 @@ function App() {
           <Route path="/plataforma/recompensas" element={<Lootboxes />}></Route>
         </Route>
         <Route path="/*" element={<ErrorPage />}></Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   )
 }
 

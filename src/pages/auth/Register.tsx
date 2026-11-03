@@ -4,6 +4,7 @@ import { FiArrowRight, FiLock } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { useUser } from "../../types/user";
 
 type AuthMode = "login" | "register";
 
@@ -16,6 +17,7 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+    const { updateUser } = useUser();
 
     const isLogin = mode === "login";
 
@@ -25,7 +27,8 @@ const Register = () => {
         setErrorMessage("");
 
         if (!isLogin) {
-            localStorage.setItem("user", JSON.stringify({ nome: name, email, senha: password }));
+            const newUser = { nome: name, email, senha: password };
+            updateUser(newUser);
             window.setTimeout(() => navigate("/plataforma/home"), 1000);
             return;
         }
@@ -48,7 +51,7 @@ const Register = () => {
             }
 
             const user = await response.json();
-            localStorage.setItem("user", JSON.stringify(user));
+            updateUser(user);
             navigate("/plataforma/home");
         } catch (error) {
             console.error("Não foi possível realizar o login.", error);
