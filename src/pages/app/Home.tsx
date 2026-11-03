@@ -7,6 +7,7 @@ import EditarUsuarioModal, { type EditarUsuarioPayload } from "./components/moda
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useUser, getUserDisplayName } from "../../types/user";
+import { updateUser as updateUserRequest } from "../../services/authService";
 
 function Home() {
     const { user, updateUser } = useUser();
@@ -23,15 +24,10 @@ function Home() {
         setIsUpdatingUser(true);
         setUserErrorMessage("");
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/${user.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id: user.id,
-                    nickName: payload.nome,
-                    email: payload.email,
-                    ...(payload.senha ? { senha: payload.senha } : {}),
-                }),
+            const response = await updateUserRequest(user.id, {
+                nickName: payload.nome,
+                email: payload.email,
+                ...(payload.senha ? { senha: payload.senha } : {}),
             });
 
             console.log("Usuário editado com sucesso.", payload.nome, payload.email, payload.senha, user.id);

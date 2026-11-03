@@ -6,6 +6,7 @@ import TopBar from "./components/TopBar";
 import ComercioCard, { type Comercio } from "./components/ComercioCard";
 import CriarComercioModal, { type CriarComercioPayload } from "./components/modal/CriarComercioModal";
 import { getStoredUser } from "../../types/user";
+import { createComercio, listComercios, updateComercio } from "../../services/commerceService";
 
 const idUsuarioLogado = getStoredUser()?.id ?? null;
 
@@ -27,7 +28,7 @@ function Comercios() {
             setErrorMessage("");
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios`, { signal: controller.signal });
+                const response = await listComercios(controller.signal);
 
                 if (response.status === 204) {
                     setComercios([]);
@@ -66,17 +67,13 @@ function Comercios() {
             setIsCreating(true);
             setCreateErrorMessage("");
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios/${editingComercio.id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        id: editingComercio.id,
-                        idUsuario: idUsuarioLogado,
-                        idPlano: payload.idPlano,
-                        nome: payload.nome,
-                        planoAtivo: payload.planoAtivo,
-                        cnpj: payload.cnpj,
-                    }),
+                const response = await updateComercio({
+                    ...editingComercio,
+                    idUsuario: idUsuarioLogado ?? editingComercio.idUsuario,
+                    idPlano: payload.idPlano,
+                    nome: payload.nome,
+                    planoAtivo: payload.planoAtivo,
+                    cnpj: payload.cnpj,
                 });
 
                 if (!response.ok) {
@@ -104,16 +101,12 @@ function Comercios() {
         setCreateErrorMessage("");
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/comercios`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    idUsuario: idUsuarioLogado,
-                    idPlano: payload.idPlano,
-                    nome: payload.nome,
-                    planoAtivo: payload.planoAtivo,
-                    cnpj: payload.cnpj
-                }),
+            const response = await createComercio({
+                idUsuario: idUsuarioLogado,
+                idPlano: payload.idPlano,
+                nome: payload.nome,
+                planoAtivo: payload.planoAtivo,
+                cnpj: payload.cnpj,
             });
 
             if (!response.ok) {

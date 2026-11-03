@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useUser } from "../../types/user";
+import { createUser, loginUser } from "../../services/authService";
 
 type AuthMode = "login" | "register";
 
@@ -27,32 +28,18 @@ const Register = () => {
         setErrorMessage("");
 
         if (!isLogin) {
-            const apiUrl = import.meta.env.VITE_API_URL;
-
             try {
-                const createResponse = await fetch(`${apiUrl}/usuarios`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        nickName: name.trim(),
-                        email: email.trim(),
-                        senha: password,
-                    }),
+                const createResponse = await createUser({
+                    nickName: name.trim(),
+                    email: email.trim(),
+                    senha: password,
                 });
 
                 if (!createResponse.ok) {
                     throw new Error(`Account creation failed with status ${createResponse.status}`);
                 }
 
-                const loginResponse = await fetch(`${apiUrl}/usuarios/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email: email.trim(), senha: password }),
-                });
+                const loginResponse = await loginUser({ email: email.trim(), senha: password });
 
                 if (!loginResponse.ok) {
                     throw new Error(`Login after account creation failed with status ${loginResponse.status}`);
@@ -70,14 +57,7 @@ const Register = () => {
             return;
         }
 
-        const apiUrl = import.meta.env.VITE_API_URL;
-        const loginRequest = fetch(`${apiUrl}/usuarios/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, senha: password }),
-        });
+        const loginRequest = loginUser({ email, senha: password });
         const minimumDelay = new Promise((resolve) => window.setTimeout(resolve, 1000));
 
         try {

@@ -6,6 +6,7 @@ import TopBar from "./components/TopBar";
 import LootboxCard from "./components/LootboxCard";
 import RecompensaModal from "./components/modal/RecompensaModal";
 import { useUser } from "../../types/user";
+import { openLootbox } from "../../services/lootboxService";
 
 export interface Recompensa {
     idInventario?: number;
@@ -109,10 +110,7 @@ function Lootboxes() {
         setOpeningLootboxId(lootboxId);
         setErrorMessage("");
         try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/lootbox/abrir/${encodeURIComponent(user.email)}/${lootbox.tipo}`,
-                { method: "POST" },
-            );
+            const response = await openLootbox(user.email, lootbox.tipo);
 
             if (!response.ok) {
                 throw new Error(`Não foi possível abrir a lootbox: ${response.status}`);

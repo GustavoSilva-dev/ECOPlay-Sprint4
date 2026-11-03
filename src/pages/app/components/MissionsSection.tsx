@@ -1,6 +1,7 @@
 import { PiPlantFill } from "react-icons/pi";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { listSustainableMissions } from "../../../services/missionService";
 
 export interface Mission {
     id: number;
@@ -31,9 +32,7 @@ function MissionsSection() {
             setErrorMessage("");
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/missoes/padroes`, {
-                    signal: controller.signal,
-                });
+                const response = await listSustainableMissions(controller.signal);
 
                 if (response.status === 204) {
                     setMissions([]);

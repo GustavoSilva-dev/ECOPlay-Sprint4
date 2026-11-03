@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiGift } from "react-icons/fi";
 import { getStoredUser } from "../../../types/user";
+import { listUserRewards } from "../../../services/rewardService";
 
 interface Recompensa {
     id: number;
@@ -26,10 +27,7 @@ function RecentRewards() {
             }
 
             try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_API_URL}/recompensas/usuario/${user.id}`,
-                    { signal: controller.signal },
-                );
+                const response = await listUserRewards(user.id, controller.signal);
 
                 if (response.status === 204) {
                     setRecompensas([]);

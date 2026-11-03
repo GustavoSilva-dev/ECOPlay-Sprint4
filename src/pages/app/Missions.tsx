@@ -9,6 +9,7 @@ import MissionCard, { type MissionCardData } from "./components/MissionCard";
 import MissionCompletionModal from "./components/modal/MissionCompletionModal";
 import CreateMissionModal, { type CreateMissionPayload } from "./components/modal/CreateMissionModal";
 import { useUser } from "../../types/user";
+import { completeMission, createMission, listMissions } from "../../services/missionService";
 
 type MissionCategory = "sustainable" | "local";
 
@@ -59,8 +60,7 @@ function Missions() {
             setIsLoading(true);
             setErrorMessage("");
             try {
-                const endpoint = activeCategory === "sustainable" ? "/missoes/padroes" : "/missoes/comercio";
-                const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, { signal: controller.signal });
+                const response = await listMissions(activeCategory, controller.signal);
 
                 if (response.status === 204) {
                     setMissionList([]);
@@ -107,9 +107,7 @@ function Missions() {
         }
 
         setIsConfirming(true);
-        void fetch(`${import.meta.env.VITE_API_URL}/missoes/concluir/${user.id}/${selectedMission.id}`, {
-            method: "POST",
-        }).then(async (response) => {
+        void completeMission(user.id, selectedMission.id).then(async (response) => {
             if (!response.ok) {
                 throw new Error(`Erro ao concluir missão: ${response.status}`);
             }
@@ -129,16 +127,7 @@ function Missions() {
         setIsCreatingMission(true);
         setCreateErrorMessage("");
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/missoes`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    idComercio: payload.idComercio,
-                    nome: payload.name,
-                    descricao: payload.description,
-                    pontosRecompensa: payload.ecopoints,
-                }),
-            });
+            const response = await createMission(payload);
 
             if (!response.ok) {
                 throw new Error(`Erro ao criar missão: ${response.status}`);
