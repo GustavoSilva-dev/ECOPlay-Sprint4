@@ -210,11 +210,11 @@ O projeto utiliza uma identidade visual inspirada em:
 
 # 🔗 Link do Repositório
 
-Este projeto está disponível publicamente no GitHub:
+Este projeto está disponível publicamente:
 
-**📌 [ECOPlay-ChallengeSprint3-4](https://github.com/GustavoSilva-dev/ECOPlay-ChallengeSprint3-4)** <br/>
-**📌 [Site em Produção](https://eco-play-challenge.vercel.app/)** <br/>
-**📌 [Vídeo Apresentativo](https://www.youtube.com/watch?v=PwakcwTiz2E)**
+**📌 [Projeto no Github](https://github.com/GustavoSilva-dev/ECOPlay-Sprint4)** <br/>
+**📌 [Site em Produção](https://ecoplay-sprint4-src.vercel.app/)** <br/>
+**📌 [Vídeo Apresentativo das Funcionalidades](https://www.youtube.com/watch?v=9ZKqxf-D9E0)**
 
 ---
 
