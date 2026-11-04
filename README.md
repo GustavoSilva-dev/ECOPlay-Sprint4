@@ -137,52 +137,65 @@ O projeto utiliza uma identidade visual inspirada em:
 ```bash
 📁 ecoplay-challenge
 │
-├── 📁 public
+├── 📁 public                  # Arquivos públicos e estáticos
 ├── 📁 src
-│   ├── 📁 assets
+│   ├── 📁 assets              # Imagens, fontes e demais recursos visuais
 │   │   ├── 📁 fontes
 │   │   └── 📁 imagens
-│   ├── 📁 components
-│   │   └── 📁 prototipo-structure
-│   ├── 📁 hooks
+│   ├── 📁 components           # Componentes reutilizáveis da interface
+│   ├── 📁 hooks                # Hooks personalizados
 │   ├── 📁 pages
-│   ├── 📁 types
-│   ├── 📄 App.css
-│   ├── 📄 App.tsx
-│   ├── 📄 index.css
-│   └── 📄 main.tsx
-├── 📄 index.html
-├── 📄 package.json
-├── 📄 tsconfig.json
-├── 📄 vite.config.ts
+│   │   ├── 📁 app             # Páginas da plataforma autenticada
+│   │   ├── 📁 auth            # Páginas relacionadas à autenticação
+│   │   └── 📁 institucional   # Páginas públicas institucionais
+│   ├── 📁 services             # Comunicação com a API e regras de serviços
+│   ├── 📁 types               # Tipos e contexto compartilhados
+│   ├── 📄 App.tsx              # Configuração das rotas
+│   └── 📄 main.tsx             # Ponto de entrada da aplicação
+├── 📄 index.html               # Documento HTML principal
+├── 📄 package.json              # Dependências e scripts do projeto
+├── 📄 tsconfig.json             # Configuração do TypeScript
+├── 📄 vite.config.ts            # Configuração do Vite
 │
 └── 📄 README.md
 ```
 
 ## Organização do código
 
-- `src/assets`: imagens e fontes utilizadas pela aplicação;
-- `src/components`: componentes reutilizáveis de layout e interface;
-- `src/components/prototipo-structure`: componentes exclusivos da área de protótipo;
-- `src/hooks`: hooks reutilizáveis, como a animação de revelação durante o scroll;
-- `src/pages`: páginas associadas às rotas da aplicação;
-- `src/types`: interfaces e tipos compartilhados, incluindo os dados do protótipo;
-- `src/App.tsx`: configuração das rotas da aplicação.
+- `src/assets`: imagens, fontes e outros recursos utilizados pela aplicação;
+- `src/components`: componentes reutilizáveis, como cabeçalho, rodapé, formulários, cards e controle de acesso;
+- `src/hooks`: hooks reutilizáveis, como `useScrollReveal`, usado nas animações de entrada durante o scroll;
+- `src/pages/institucional`: páginas públicas, como início, solução, equipe, contato e perguntas frequentes;
+- `src/pages/auth`: fluxos relacionados à autenticação e cadastro;
+- `src/pages/app`: telas da plataforma, incluindo início, missões, comércios e recompensas, além de seus componentes específicos;
+- `src/services`: integração com a API REST e serviços de autenticação, missões, comércios, lootboxes e recompensas;
+- `src/types`: tipos compartilhados e contexto do usuário;
+- `src/App.tsx`: definição das rotas públicas, da área protegida e da página de erro;
+- `src/main.tsx`: inicialização e renderização da aplicação React.
 
-## Rotas principais
+## Principais rotas
 
-| Rota | Página |
-|------|--------|
-| `/` | Página inicial |
-| `/sobre` | Sobre a solução |
-| `/quem-somos` | Integrantes da equipe |
-| `/quem-somos/:id` | Perfil dinâmico de um integrante |
-| `/solucao` | A solução |
-| `/fluxograma` | Fluxograma da jornada |
-| `/contato` | Formulário de contato |
-| `/faq` | Perguntas frequentes |
-| `/prototipo` | Protótipo navegável |
+### Área pública
 
+- `/` — página inicial institucional;
+- `/sobre` — informações sobre o projeto;
+- `/quem-somos` — integrantes da equipe;
+- `/quem-somos/:id` — contato dinâmico de um integrante;
+- `/solucao` — apresentação da solução ECOPlay;
+- `/fluxograma` — fluxograma da jornada do usuário;
+- `/contato` — formulário de contato;
+- `/faq` — perguntas frequentes;
+- `/plataforma` — acesso à plataforma.
+
+### Plataforma autenticada
+
+As rotas abaixo são protegidas pelo componente `ProtectedRoute` e exigem autenticação:
+
+- `/plataforma/home` — painel inicial da plataforma;
+- `/plataforma/missoes` — listagem e gerenciamento de missões;
+- `/plataforma/comercios` — comércios parceiros;
+- `/plataforma/recompensas` — lootboxes e recompensas;
+- `/*` — página de erro para rotas não encontradas.
 ---
 
 # 📈 Futuras Implementações
