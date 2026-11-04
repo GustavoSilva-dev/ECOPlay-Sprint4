@@ -92,7 +92,7 @@ const Register = () => {
                 </div>
 
                 <section className="flex flex-col items-center py-8 text-center sm:py-10 content-fade-in">
-                    <h1 className="font-['Nico_Moji',sans-serif] text-5xl font-normal leading-none text-[#2c3952] drop-shadow-[3px_4px_0_rgb(83_96_255_/_0.3)] sm:text-6xl">
+                    <h1 className="shadow-animate font-['Nico_Moji',sans-serif] text-5xl font-normal leading-none text-[#2c3952] drop-shadow-[3px_4px_0_rgb(83_96_255_/_0.3)] sm:text-6xl">
                         ECOPlay
                     </h1>
                     <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#26325e] sm:text-base">
