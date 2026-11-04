@@ -1,5 +1,7 @@
 # 🌱🎮 ECOPlay - Gamificando Ações Sustentáveis
 
+<img src="./public/icone.jpg"/>
+
 # 📖 Sobre o Projeto
 
 O ECOPlay é uma plataforma gamificada focada em sustentabilidade, criada para transformar ações ecológicas em experiências sociais interativas e recompensadoras.
